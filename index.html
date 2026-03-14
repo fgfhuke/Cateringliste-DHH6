@@ -1124,6 +1124,11 @@ async function exportLaden() {
             const d=new Date(t+"T12:00:00");
             const isWE=d.getDay()===0||d.getDay()===6;
             const bg=isWE?' style="background:#fff3e0"':'';
+            // Für Komparsen/Gäste: tatsächliche Anzahl anzeigen
+            if(e.tagAnzahlen) {
+              const n=e.tagAnzahlen[t]||0;
+              return `<td${bg}>${n>0?`<span style="color:var(--accent);font-weight:700;font-size:11px">${n}</span>`:'<span style="color:var(--border)">·</span>'}</td>`;
+            }
             return `<td${bg}>${e.tage.includes(t)?'<span style="color:var(--green);font-weight:900;font-size:12px">✓</span>':'<span style="color:var(--border)">·</span>'}</td>`;
           }).join("")}
         </tr>`;
@@ -1212,7 +1217,10 @@ function pdfExport() {
       body.push([
         e.name,
         {content: String(e.anzahl), styles:{fontSize:9, fontStyle:"bold", textColor:[26,107,60], fillColor:[232,244,237], halign:"center"}},
-        ...alleTage.map(t => e.tage.includes(t) ? 1 : "")
+        ...alleTage.map(t => {
+          if(e.tagAnzahlen) return e.tagAnzahlen[t]||"";
+          return e.tage.includes(t) ? 1 : "";
+        })
       ]);
     });
   });
@@ -1249,6 +1257,10 @@ function pdfExport() {
         data.cell.text = [""];
         data.cell.styles.fillColor = [255,255,255];
       }
+      // Komparsen/Gäste: Zahl anzeigen
+      if(typeof data.cell.raw === "number" && data.cell.raw > 1 && data.column.index >= 2) {
+        data.cell.text = [String(data.cell.raw)];
+      }
       // Wochenend-Spalten Header orange
       if(data.section==="head" && data.column.index>=2 && weIndizes.has(data.column.index)) {
         data.cell.styles.fillColor = [255,243,224];
@@ -1280,6 +1292,12 @@ function pdfExport() {
         const y = data.cell.y + data.cell.height/2;
         doc.setFillColor(26,107,60);
         doc.circle(x, y, 1.2, "F");
+      }
+      // Komparsen/Gäste Zahlen: grün anzeigen
+      if(typeof data.cell.raw === "number" && data.cell.raw > 1 && data.section === "body" && data.column.index >= 2) {
+        data.cell.styles.textColor = [26,107,60];
+        data.cell.styles.fontStyle = "bold";
+        data.cell.styles.fontSize = 7;
       }
     },
   });

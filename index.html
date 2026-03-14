@@ -1150,7 +1150,10 @@ function csvExport() {
     `"${e.name}"`,
     `"${e.abteilung}"`,
     e.anzahl,
-    ...alleTage.map(t=>e.tage.includes(t)?"1":"0")
+    ...alleTage.map(t=>{
+      if(e.tagAnzahlen) return e.tagAnzahlen[t]||"0";
+      return e.tage.includes(t)?"1":"0";
+    })
   ].join(";"));
   const csv=[header,...rows].join("\n");
   const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});

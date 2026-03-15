@@ -207,7 +207,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.0</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.1</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -620,7 +620,23 @@ function stepperChange(id, delta) {
   const inp = document.getElementById(id);
   const val = parseInt(inp.value)||0;
   inp.value = Math.max(0, val + delta);
-  planAutosave();
+  // Zähler direkt speichern
+  const datum = document.getElementById("datum-input").value;
+  if(!datum) return;
+  const isKomp = id==="komparsen-input";
+  speichereZaehler(datum, isKomp ? "KOMP01" : "GAEST01",
+    isKomp ? "Komparsen" : "Gäste",
+    isKomp ? "10 Komparsen" : "11 Gäste",
+    parseInt(inp.value)||0);
+}
+
+async function speichereZaehler(datum, pid, name, abt, wert) {
+  try {
+    await api("setZaehler", {datum, pid, name, abteilung:abt, wert});
+    setAutosaveStatus("saved");
+  } catch(e) {
+    setAutosaveStatus("err");
+  }
 }
 
 function heuteDatum() {
@@ -765,9 +781,48 @@ function alphaScroll(b) {
 }
 
 function toggle(id) {
-  if(anwesendHeute.has(id)) anwesendHeute.delete(id); else anwesendHeute.add(id);
+  const war = anwesendHeute.has(id);
+  if(war) anwesendHeute.delete(id); else anwesendHeute.add(id);
   renderListe();
-  planAutosave();
+  // Sofort nur diesen einen Eintrag speichern
+  const p = allePersonen.find(x=>x.id===id);
+  if(!p) return;
+  const datum = document.getElementById("datum-input").value;
+  if(!datum) return;
+  speichereEinzelEintrag(datum, id, !war, p);
+}
+
+async function speichereEinzelEintrag(datum, pid, an, p) {
+  if(speichertGerade) { speichernAusstehend = true; return; }
+  speichertGerade = true;
+  setAutosaveStatus("saving");
+  try {
+    const res = await api("togglePerson", {
+      datum, pid, an,
+      name: p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname,
+      abteilung: p.position||""
+    });
+    if(res.ok) {
+      setAutosaveStatus("saved");
+      if(an) personenMitTeilnahme.add(pid);
+      renderListe();
+    } else {
+      // Rollback
+      if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
+      renderListe();
+      zeigeFehlerOverlay("Server-Fehler: " + (res.error||""));
+      setAutosaveStatus("err");
+    }
+  } catch(e) {
+    // Rollback
+    if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
+    renderListe();
+    zeigeFehlerOverlay("Verbindung unterbrochen. Bitte nochmal tippen.");
+    setAutosaveStatus("err");
+  } finally {
+    speichertGerade = false;
+    if(speichernAusstehend) { speichernAusstehend=false; setTimeout(autosave,300); }
+  }
 }
 
 // ── Autosave ──

@@ -207,7 +207,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.5</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.6</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -448,7 +448,8 @@ function toast(msg, ms=2200) {
 
 async function api(action, extra={}) {
   const params=new URLSearchParams({password:SESSION_PW,action,data:encodeURIComponent(JSON.stringify(extra))});
-  const r=await fetch(`${API_URL}?${params}`,{method:"GET",redirect:"follow"});
+  // keepalive:true verhindert dass iOS den Request beim Scrollen abbricht
+  const r=await fetch(`${API_URL}?${params}`,{method:"GET",redirect:"follow",keepalive:true});
   const text=await r.text();
   try{return JSON.parse(text);}catch(e){throw new Error("Ungültige Antwort: "+text.slice(0,100));}
 }
@@ -785,39 +786,23 @@ async function autosave() {
   letzterSpeicherversuch = {datum, eintraege, komparsen, gaeste};
 
   try {
-    // Längeres Timeout: 45 Sekunden
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 45000);
-    const params = new URLSearchParams({
-      password: SESSION_PW, action: "setTeilnahme",
-      data: encodeURIComponent(JSON.stringify({datum,eintraege,komparsen,gaeste}))
-    });
-    const r = await fetch(`${API_URL}?${params}`, {
-      method:"GET", redirect:"follow", signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    const text = await r.text();
-    let res;
-    try { res = JSON.parse(text); } catch(e) { res = {ok:false,error:"Ungültige Antwort"}; }
-
+    const res = await api("setTeilnahme", {datum, eintraege, komparsen, gaeste});
     if(res.ok) {
       setAutosaveStatus("saved");
       anwesendHeute.forEach(id => personenMitTeilnahme.add(id));
       renderListe();
-      letzterSpeicherversuch = null; // Kein Retry nötig
+      letzterSpeicherversuch = null;
     } else {
       setAutosaveStatus("err");
       zeigeFehlerOverlay("Server-Fehler: " + (res.error||"Unbekannt"));
     }
   } catch(e) {
-    if(e.name === "AbortError") {
-      // Timeout — Daten könnten trotzdem gespeichert sein
-      setAutosaveStatus("err");
-      zeigeFehlerOverlay("Zeitüberschreitung — die Daten wurden möglicherweise trotzdem gespeichert. Prüfe das Sheet bevor du weitermachst.");
-    } else {
-      setAutosaveStatus("err");
-      zeigeFehlerOverlay("Verbindungsfehler: " + e.message);
-    }
+    setAutosaveStatus("err");
+    // "Load failed" = iOS Safari hat Request abgebrochen (Screen-Dimming, Hintergrund)
+    // Daten könnten trotzdem gespeichert sein — Overlay zeigen
+    zeigeFehlerOverlay("Verbindung unterbrochen (möglicherweise hat iOS den Request abgebrochen).
+
+Die Daten wurden wahrscheinlich trotzdem gespeichert — tippe auf "Sheet prüfen" um das zu bestätigen.");
   }
 }
 

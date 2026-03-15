@@ -207,7 +207,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.6</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.7</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -448,8 +448,7 @@ function toast(msg, ms=2200) {
 
 async function api(action, extra={}) {
   const params=new URLSearchParams({password:SESSION_PW,action,data:encodeURIComponent(JSON.stringify(extra))});
-  // keepalive:true verhindert dass iOS den Request beim Scrollen abbricht
-  const r=await fetch(`${API_URL}?${params}`,{method:"GET",redirect:"follow",keepalive:true});
+  const r=await fetch(`${API_URL}?${params}`,{method:"GET",redirect:"follow"});
   const text=await r.text();
   try{return JSON.parse(text);}catch(e){throw new Error("Ungültige Antwort: "+text.slice(0,100));}
 }

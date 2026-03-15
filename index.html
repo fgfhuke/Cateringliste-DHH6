@@ -207,7 +207,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.2</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.3</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -425,7 +425,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
 
 <script>
 // ══ KONFIGURATION ══════════════════════════════════════════
-const API_URL = "https://script.google.com/macros/s/AKfycbz_cB6Sol25skRKJWQeG_3y5JHG2iBmREnilLxKx1WDqT8r3yLlgcNnV-j-2dt2yALD/exec";
+const API_URL = "Verbindung unterbrochen. Die Daten wurden wahrscheinlich trotzdem gespeichert — tippe auf Sheet prüfen um das zu bestätigen.";
 // ═══════════════════════════════════════════════════════════
 
 let SESSION_PW = "", allePersonen = [], anwesendHeute = new Set(), exportDaten = [], autosaveTimer = null, PROJEKT_KUERZEL = "", sortierung = "nachname", personenMitTeilnahme = new Set();
@@ -771,48 +771,66 @@ function alphaScroll(b) {
   setTimeout(()=>document.querySelectorAll(".alpha-sidebar span").forEach(s=>s.classList.remove("active")),400);
 }
 
+// Queue für ausstehende Toggle-Operationen
+const toggleQueue = [];
+let verarbeiteQueue = false;
+
 function toggle(id) {
   const war = anwesendHeute.has(id);
   if(war) anwesendHeute.delete(id); else anwesendHeute.add(id);
   renderListe();
-  // Sofort nur diesen einen Eintrag speichern
   const p = allePersonen.find(x=>x.id===id);
   if(!p) return;
   const datum = document.getElementById("datum-input").value;
   if(!datum) return;
-  speichereEinzelEintrag(datum, id, !war, p);
+  // In Queue stellen — doppelte Einträge für gleiche Person zusammenfassen
+  const existing = toggleQueue.findIndex(q=>q.pid===id);
+  if(existing >= 0) {
+    // Gleiche Person nochmal getoggled — aus Queue entfernen (heben sich auf)
+    toggleQueue.splice(existing, 1);
+  } else {
+    toggleQueue.push({datum, pid:id, an:!war, p});
+  }
+  verarbeiteToggleQueue();
 }
 
-async function speichereEinzelEintrag(datum, pid, an, p) {
-  if(speichertGerade) { speichernAusstehend = true; return; }
-  speichertGerade = true;
+async function verarbeiteToggleQueue() {
+  if(verarbeiteQueue || toggleQueue.length === 0) return;
+  verarbeiteQueue = true;
   setAutosaveStatus("saving");
-  try {
-    const res = await api("togglePerson", {
-      datum, pid, an,
-      name: p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname,
-      abteilung: p.position||""
-    });
-    if(res.ok) {
-      setAutosaveStatus("saved");
-      if(an) personenMitTeilnahme.add(pid);
-      renderListe();
-    } else {
-      // Rollback
+  while(toggleQueue.length > 0) {
+    const {datum, pid, an, p} = toggleQueue.shift();
+    try {
+      const res = await api("togglePerson", {
+        datum, pid, an,
+        name: p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname,
+        abteilung: p.position||""
+      });
+      if(res.ok) {
+        if(an) personenMitTeilnahme.add(pid);
+      } else {
+        // Rollback dieses Eintrags
+        if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
+        renderListe();
+        setAutosaveStatus("err");
+        zeigeFehlerOverlay("Server-Fehler: " + (res.error||""));
+      }
+    } catch(e) {
+      // Rollback + Rest der Queue verwerfen
       if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
+      toggleQueue.length = 0; // Queue leeren
       renderListe();
-      zeigeFehlerOverlay("Server-Fehler: " + (res.error||""));
       setAutosaveStatus("err");
+      zeigeFehlerOverlay("Verbindung unterbrochen. Bitte nochmal tippen.");
+      break;
     }
-  } catch(e) {
-    // Rollback
-    if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
+  }
+  verarbeiteQueue = false;
+  if(toggleQueue.length === 0) {
+    setAutosaveStatus("saved");
     renderListe();
-    zeigeFehlerOverlay("Verbindung unterbrochen. Bitte nochmal tippen.");
-    setAutosaveStatus("err");
-  } finally {
-    speichertGerade = false;
-    if(speichernAusstehend) { speichernAusstehend=false; setTimeout(autosave,300); }
+  } else {
+    verarbeiteToggleQueue(); // Noch mehr in der Queue
   }
 }
 

@@ -141,6 +141,9 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--surface);border-radius:24px;padding:12px 24px;font-size:15px;font-weight:500;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.18)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Autosave-Fehler: roter Balken oben */
+.save-error-bar{position:fixed;top:0;left:0;right:0;background:var(--red);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:6px 16px;z-index:300;cursor:pointer;animation:slidedown .3s ease}
+@keyframes slidedown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
 
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -204,7 +207,7 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.4</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.5</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -397,6 +400,28 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- Fehler-Overlay -->
+<div id="fehler-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:28px 24px;width:100%;max-width:380px;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+    <div style="font-size:28px;margin-bottom:12px">⚠️</div>
+    <div style="font-size:17px;font-weight:600;margin-bottom:8px">Speicherfehler</div>
+    <div id="fehler-text" style="font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.6">
+      Die Verbindung wurde unterbrochen. Deine Einträge sind möglicherweise trotzdem gespeichert.
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <button class="btn btn-primary" onclick="fehlerRetry()" style="font-size:15px">
+        🔄 Nochmal versuchen
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="fehlerPruefen()" style="font-size:14px">
+        ✓ Sheet prüfen — alles OK, weiter
+      </button>
+      <button class="btn btn-ghost btn-sm" onclick="fehlerOverlaySchliessen()" style="font-size:13px;color:var(--muted)">
+        Schließen (Änderungen könnten verloren sein)
+      </button>
+    </div>
+  </div>
+</div>
 
 <script>
 // ══ KONFIGURATION ══════════════════════════════════════════
@@ -743,6 +768,9 @@ function planAutosave() {
   autosaveTimer=setTimeout(autosave,1200);
 }
 
+// Letzter Speicher-Zustand für Retry
+let letzterSpeicherversuch = null;
+
 async function autosave() {
   const datum=document.getElementById("datum-input").value;
   if(!datum)return;
@@ -752,15 +780,104 @@ async function autosave() {
   const eintraege=allePersonen
     .filter(p=>anwesendHeute.has(p.id))
     .map(p=>({id:p.id,name:p.vorname?`${p.nachname}, ${p.vorname}`:p.nachname,abteilung:p.position||""}));
+
+  // Für Retry speichern
+  letzterSpeicherversuch = {datum, eintraege, komparsen, gaeste};
+
   try {
-    const res=await api("setTeilnahme",{datum,eintraege,komparsen,gaeste});
+    // Längeres Timeout: 45 Sekunden
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 45000);
+    const params = new URLSearchParams({
+      password: SESSION_PW, action: "setTeilnahme",
+      data: encodeURIComponent(JSON.stringify({datum,eintraege,komparsen,gaeste}))
+    });
+    const r = await fetch(`${API_URL}?${params}`, {
+      method:"GET", redirect:"follow", signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    const text = await r.text();
+    let res;
+    try { res = JSON.parse(text); } catch(e) { res = {ok:false,error:"Ungültige Antwort"}; }
+
     if(res.ok) {
       setAutosaveStatus("saved");
-      // Anwesende zu personenMitTeilnahme hinzufügen
       anwesendHeute.forEach(id => personenMitTeilnahme.add(id));
-      renderListe(); // Stifte ausblenden
-    } else { setAutosaveStatus("err"); }
-  } catch(e) { setAutosaveStatus("err"); }
+      renderListe();
+      letzterSpeicherversuch = null; // Kein Retry nötig
+    } else {
+      setAutosaveStatus("err");
+      zeigeFehlerOverlay("Server-Fehler: " + (res.error||"Unbekannt"));
+    }
+  } catch(e) {
+    if(e.name === "AbortError") {
+      // Timeout — Daten könnten trotzdem gespeichert sein
+      setAutosaveStatus("err");
+      zeigeFehlerOverlay("Zeitüberschreitung — die Daten wurden möglicherweise trotzdem gespeichert. Prüfe das Sheet bevor du weitermachst.");
+    } else {
+      setAutosaveStatus("err");
+      zeigeFehlerOverlay("Verbindungsfehler: " + e.message);
+    }
+  }
+}
+
+function zeigeFehlerOverlay(text) {
+  document.getElementById("fehler-text").textContent = text;
+  document.getElementById("fehler-overlay").style.display = "flex";
+}
+
+function fehlerOverlaySchliessen() {
+  document.getElementById("fehler-overlay").style.display = "none";
+}
+
+async function fehlerRetry() {
+  if(!letzterSpeicherversuch) { fehlerOverlaySchliessen(); return; }
+  fehlerOverlaySchliessen();
+  // Nochmal versuchen mit denselben Daten
+  setAutosaveStatus("saving");
+  try {
+    const params = new URLSearchParams({
+      password: SESSION_PW, action: "setTeilnahme",
+      data: encodeURIComponent(JSON.stringify(letzterSpeicherversuch))
+    });
+    const r = await fetch(`${API_URL}?${params}`, {method:"GET", redirect:"follow"});
+    const res = await r.json();
+    if(res.ok) {
+      setAutosaveStatus("saved");
+      anwesendHeute.forEach(id => personenMitTeilnahme.add(id));
+      renderListe();
+      letzterSpeicherversuch = null;
+      toast("Gespeichert ✓");
+    } else {
+      setAutosaveStatus("err");
+      zeigeFehlerOverlay("Retry fehlgeschlagen: " + (res.error||""));
+    }
+  } catch(e) {
+    setAutosaveStatus("err");
+    zeigeFehlerOverlay("Retry fehlgeschlagen: " + e.message);
+  }
+}
+
+async function fehlerPruefen() {
+  // Teilnahme vom Server laden und mit lokalem Zustand vergleichen
+  fehlerOverlaySchliessen();
+  const datum = document.getElementById("datum-input").value;
+  if(!datum) return;
+  setAutosaveStatus("laden");
+  try {
+    const res = await api("getTeilnahme", {datum});
+    if(res.ok) {
+      anwesendHeute = new Set(res.anwesend);
+      document.getElementById("komparsen-input").value = res.komparsen||0;
+      document.getElementById("gaeste-input").value = res.gaeste||0;
+      renderListe();
+      setAutosaveStatus("saved");
+      toast("Daten vom Server geladen ✓");
+      letzterSpeicherversuch = null;
+    }
+  } catch(e) {
+    setAutosaveStatus("err");
+  }
 }
 
 function setAutosaveStatus(s) {

@@ -268,7 +268,7 @@ body.is-touch .tabs{padding:0 4px}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="login-logo">Film · Set</div>
       <div style="text-align:right;font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em;line-height:1.6">
-        <div>V 2.0</div>
+        <div>V 2.1</div>
         <div style="font-size:10px">© JH 2026</div>
       </div>
     </div>
@@ -288,7 +288,7 @@ body.is-touch .tabs{padding:0 4px}
     <button class="btn-icon" id="topbar-back-touch" onclick="zurückZuTouch()" title="Zurück zur mobilen Ansicht" style="display:none;font-size:22px;color:var(--accent)">←</button>
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.0</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.1</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
   <div class="tabs">
@@ -514,7 +514,7 @@ body.is-touch .tabs{padding:0 4px}
   <div class="touch-topbar">
     <div class="touch-brand" id="touch-brand-btn" style="font-size:17px">Catering <span id="touch-projekt" style="opacity:.7;font-size:13px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
-    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 2.0</span>
+    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 2.1</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
 
@@ -538,7 +538,10 @@ body.is-touch .tabs{padding:0 4px}
 
   <!-- PANEL: Catering Liste -->
   <div class="touch-panel active" id="touch-panel-catering">
-    <div style="padding:18px 16px 12px;background:var(--bg);display:flex;justify-content:center">
+    <div style="padding:18px 16px 0;background:var(--bg);text-align:center">
+      <div style="font-size:18px;font-weight:700;color:var(--text);margin-bottom:12px">Hier kannst du dich eintragen</div>
+    </div>
+    <div style="padding:0 16px 12px;background:var(--bg);display:flex;justify-content:center">
       <div style="position:relative;width:85%;max-width:480px">
         <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:32px;color:var(--accent);pointer-events:none;line-height:1">⌕</span>
         <input type="text" id="touch-suche" placeholder="Nachname finden…"
@@ -1960,9 +1963,9 @@ function touchRenderListe(suche) {
   }
 
   // Nur Wortanfänge
+  // Nur nach Nachname suchen
   const treffer = allePersonen.filter(p => {
-    return p.nachname.toLowerCase().startsWith(suche) ||
-           (p.vorname||"").toLowerCase().startsWith(suche);
+    return p.nachname.toLowerCase().startsWith(suche);
   });
 
   if(treffer.length === 0) {

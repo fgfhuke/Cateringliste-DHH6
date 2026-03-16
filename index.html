@@ -6,6 +6,11 @@
 <title>Catering Liste</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- PWA: Vollbild auf iOS/Android -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Catering">
+<meta name="mobile-web-app-capable" content="yes">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <style>
@@ -195,7 +200,7 @@ body.is-touch .tabs{padding:0 4px}
 .touch-save-status{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
 
 .touch-tabs{background:var(--surface);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 8px;gap:0}
-.touch-tab{font-size:14px;font-weight:600;color:var(--muted);padding:12px 14px;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.touch-tab{font-size:18px;font-weight:600;color:var(--muted);padding:12px 14px;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
 .touch-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .touch-tab-spacer{flex:1}
 .touch-new-btn{font-size:13px;font-weight:600;color:var(--accent);padding:8px 12px;cursor:pointer;white-space:nowrap;background:var(--accent-bg);border:1.5px solid var(--green-brd);border-radius:var(--r);margin:6px 0}
@@ -270,6 +275,7 @@ body.is-touch .tabs{padding:0 4px}
 
 <div id="app">
   <div class="topbar">
+    <button class="btn-icon" id="topbar-back-touch" onclick="zurückZuTouch()" title="Zurück zur mobilen Ansicht" style="display:none;font-size:22px;color:var(--accent)">←</button>
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
     <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.3</div>
@@ -495,13 +501,14 @@ body.is-touch .tabs{padding:0 4px}
   <div class="touch-topbar">
     <div class="touch-brand" id="touch-brand-btn">Catering <span id="touch-projekt" style="opacity:.7;font-size:11px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 1.3</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)">↩</button>
   </div>
 
   <!-- Tabs -->
   <div class="touch-tabs">
     <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering">
-      Catering <span id="touch-datum-tab" style="font-size:11px;font-weight:400;color:var(--muted)"></span>
+      Cateringliste vom <span id="touch-datum-tab"></span>
     </div>
     <div class="touch-tab" data-touch-tab="komparsen">Komparsen</div>
     <div class="touch-tab-spacer"></div>
@@ -528,14 +535,16 @@ body.is-touch .tabs{padding:0 4px}
   <!-- PANEL: Komparsen -->
   <div class="touch-panel" id="touch-panel-komparsen">
     <div class="touch-komp-panel">
-      <div class="touch-komp-label">Komparsen</div>
-      <div class="touch-komp-stepper">
-        <button class="touch-komp-btn" onclick="touchStepperChange(-1)">−</button>
-        <input class="touch-komp-val" type="number" id="touch-komp-input" min="0" value="0"
-          onfocus="this.select()" oninput="touchZaehlerSpeichern()">
-        <button class="touch-komp-btn" onclick="touchStepperChange(1)">+</button>
+      <div class="touch-komp-label" style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px">Komparsen</div>
+      <div class="touch-komp-label" style="font-size:14px;margin-bottom:24px">Anzahl heute</div>
+      <div style="display:flex;align-items:center;gap:0;border:2px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);width:100%;max-width:320px">
+        <button onclick="touchStepperChange(-1)" style="width:72px;height:80px;border:none;background:var(--surface2);font-size:40px;font-weight:300;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex-shrink:0">−</button>
+        <input type="number" id="touch-komp-input" min="0" value="0"
+          onfocus="this.select()" oninput="touchZaehlerSpeichern()"
+          style="flex:1;text-align:center;font-size:52px;font-weight:700;font-family:var(--mono);border:none;background:transparent;color:var(--text);padding:8px 0;touch-action:manipulation;width:100%;outline:none;-webkit-appearance:none">
+        <button onclick="touchStepperChange(1)" style="width:72px;height:80px;border:none;background:var(--surface2);font-size:40px;font-weight:300;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex-shrink:0">+</button>
       </div>
-      <div class="touch-save-indicator" id="touch-komp-status">–</div>
+      <div style="margin-top:20px;font-size:14px;color:var(--muted);font-family:var(--mono)" id="touch-komp-status">–</div>
     </div>
   </div>
 
@@ -1696,10 +1705,13 @@ function pdfExport() {
 let touchZaehlerTimer = null;
 
 function touchInit() {
-  // Datum in Tab-Überschrift
+  // Datum in Tab-Überschrift — nur TT.MM.JJJJ
   const h = heute();
   const el = document.getElementById("touch-datum-tab");
-  if(el) el.textContent = formatDatumMitTag(h);
+  if(el) {
+    const [y,m,t] = h.split("-");
+    el.textContent = `${t}.${m}.${y}`;
+  }
 
   // Projektkürzel
   const proj = document.getElementById("touch-projekt");
@@ -1731,19 +1743,23 @@ function touchInit() {
 }
 
 function touchZuUebersicht() {
-  // Wechsel zu Desktop-App für Übersicht
   document.getElementById("app-touch").classList.remove("active");
   document.getElementById("app").classList.add("active");
+  // Zurück-Button einblenden
+  document.getElementById("topbar-back-touch").style.display = "flex";
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   const exportTab = document.querySelector('[data-tab="export"]');
-  if(exportTab) {
-    exportTab.classList.add("active");
-    exportTab.style.display="flex";
-  }
+  if(exportTab) { exportTab.classList.add("active"); exportTab.style.display="flex"; }
   document.getElementById("tab-export")?.classList.add("active");
   ladeVerfuegbareMonate();
   toast("Übersicht");
+}
+
+function zurückZuTouch() {
+  document.getElementById("app").classList.remove("active");
+  document.getElementById("app-touch").classList.add("active");
+  document.getElementById("topbar-back-touch").style.display = "none";
 }
 
 function touchSuche() {
@@ -1799,12 +1815,15 @@ function touchRenderListe(suche) {
 }
 
 function touchToggle(id) {
-  // Gleiche Logik wie normales toggle
   toggle(id);
-  // Liste neu rendern
-  setTimeout(()=>touchSuche(), 100);
-  // Status aktualisieren
-  touchSaveStatusAktualisieren();
+  // Nach Haken setzen: Suche zurücksetzen → Normalansicht
+  setTimeout(()=>{
+    document.getElementById("touch-suche").value = "";
+    document.getElementById("touch-suche-clear").style.display = "none";
+    document.getElementById("touch-list").innerHTML =
+      '<div style="color:var(--muted);font-size:15px;text-align:center;padding:32px 0">Namen eingeben um zu suchen…</div>';
+    touchSaveStatusAktualisieren();
+  }, 300);
 }
 
 function touchSaveStatusAktualisieren() {

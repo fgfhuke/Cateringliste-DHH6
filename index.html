@@ -185,6 +185,66 @@ body.is-touch .tabs{padding:0 4px}
 .person-row.kompakt .person-pos{display:none}
 .person-row.kompakt .row-edit-btn{font-size:12px;padding:0 3px}
 .alpha-divider.abt-group.kompakt{font-size:13px;font-weight:700;color:#d4740a;padding:6px 4px 3px;letter-spacing:.02em;border-bottom:1.5px solid var(--border2);margin-bottom:1px}
+
+/* ══ TOUCH INTERFACE (iPad/iPhone) ══ */
+#app-touch{display:none;height:100dvh;flex-direction:column;background:var(--bg);overflow:hidden}
+#app-touch.active{display:flex}
+
+.touch-topbar{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.touch-brand{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;flex:1;cursor:pointer;user-select:none;-webkit-user-select:none}
+.touch-save-status{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+
+.touch-tabs{background:var(--surface);border-bottom:1.5px solid var(--border);display:flex;align-items:center;padding:0 8px;gap:0}
+.touch-tab{font-size:14px;font-weight:600;color:var(--muted);padding:12px 14px;cursor:pointer;border-bottom:3px solid transparent;transition:color .15s,border-color .15s;user-select:none;white-space:nowrap}
+.touch-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.touch-tab-spacer{flex:1}
+.touch-new-btn{font-size:13px;font-weight:600;color:var(--accent);padding:8px 12px;cursor:pointer;white-space:nowrap;background:var(--accent-bg);border:1.5px solid var(--green-brd);border-radius:var(--r);margin:6px 0}
+
+.touch-panel{display:none;flex:1;flex-direction:column;overflow:hidden}
+.touch-panel.active{display:flex}
+
+/* Suchfeld oben fixiert */
+.touch-search-bar{padding:10px 14px;background:var(--surface);border-bottom:1px solid var(--border)}
+.touch-search-wrap{position:relative}
+.touch-search-wrap input{width:100%;padding:14px 44px 14px 48px;font-size:20px;border:1.5px solid var(--border);border-radius:var(--r);background:var(--bg);color:var(--text);font-family:var(--sans);outline:none;-webkit-appearance:none}
+.touch-search-wrap input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,107,60,.12)}
+.touch-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:26px;color:var(--muted);pointer-events:none}
+.touch-search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--border);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--muted)}
+
+/* Ergebnisliste scrollbar */
+.touch-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 14px 32px}
+
+/* Große Eintrags-Zeilen für Selbst-Eintragung */
+.touch-person-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);border:1.5px solid transparent;background:var(--surface);cursor:pointer;transition:background .1s,border-color .1s;user-select:none;-webkit-tap-highlight-color:transparent;box-shadow:var(--shadow);margin-bottom:4px}
+.touch-person-row.checked{background:var(--green-bg);border-color:var(--green-brd)}
+.touch-person-row:active{opacity:.85}
+.touch-checkbox{width:32px;height:32px;border-radius:6px;border:2px solid var(--border2);background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;transition:background .15s,border-color .15s}
+.touch-person-row.checked .touch-checkbox{background:var(--green);border-color:var(--green);color:#fff}
+.touch-person-name{font-size:20px;font-weight:600;color:var(--text);line-height:1.2}
+.touch-person-row.checked .touch-person-name{color:var(--accent)}
+.touch-person-pos{font-size:13px;color:var(--muted);font-family:var(--mono);margin-top:2px}
+
+/* Kein-Ergebnis + Neuen anlegen */
+.touch-no-result{padding:24px 0;text-align:center;color:var(--muted);font-size:16px}
+.touch-add-hint{margin-top:12px;padding:16px;background:var(--accent-bg);border:1.5px solid var(--green-brd);border-radius:var(--r);text-align:center;cursor:pointer}
+.touch-add-hint .hint-name{font-size:18px;font-weight:600;color:var(--accent);margin-bottom:4px}
+.touch-add-hint .hint-sub{font-size:13px;color:var(--muted)}
+
+/* Neue Person Dialog (Touch) */
+.touch-new-dialog{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;align-items:flex-end;justify-content:center}
+.touch-new-dialog.open{display:flex}
+.touch-new-sheet{background:var(--surface);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:600px;box-shadow:0 -4px 24px rgba(0,0,0,.15)}
+.touch-new-sheet h3{font-size:18px;font-weight:600;margin-bottom:16px}
+
+/* Komparsen-Panel */
+.touch-komp-panel{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;gap:24px}
+.touch-komp-label{font-size:16px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.touch-komp-stepper{display:flex;align-items:center;gap:0;border:2px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);width:100%;max-width:320px}
+.touch-komp-btn{width:72px;height:72px;border:none;background:var(--surface2);font-size:36px;font-weight:300;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.touch-komp-btn:active{background:var(--border)}
+.touch-komp-val{flex:1;text-align:center;font-size:48px;font-weight:700;font-family:var(--mono);border:none;background:transparent;color:var(--text);padding:8px 0;touch-action:manipulation}
+.touch-komp-val:focus{outline:none}
+.touch-save-indicator{font-size:13px;color:var(--muted);font-family:var(--mono);text-align:center}
 </style>
 </head>
 <body>
@@ -194,7 +254,7 @@ body.is-touch .tabs{padding:0 4px}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="login-logo">Film · Set</div>
       <div style="text-align:right;font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em;line-height:1.6">
-        <div>V 1.2</div>
+        <div>V 1.3</div>
         <div style="font-size:10px">© JH 2026</div>
       </div>
     </div>
@@ -212,7 +272,7 @@ body.is-touch .tabs{padding:0 4px}
   <div class="topbar">
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.2</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.3</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -428,6 +488,101 @@ body.is-touch .tabs{padding:0 4px}
   </div>
 </div>
 
+<!-- ══ TOUCH INTERFACE ══════════════════════════════════════ -->
+<div id="app-touch">
+
+  <!-- Topbar -->
+  <div class="touch-topbar">
+    <div class="touch-brand" id="touch-brand-btn">Catering <span id="touch-projekt" style="opacity:.7;font-size:11px"></span></div>
+    <span class="touch-save-status" id="touch-save-status"></span>
+    <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)">↩</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="touch-tabs">
+    <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering">
+      Catering <span id="touch-datum-tab" style="font-size:11px;font-weight:400;color:var(--muted)"></span>
+    </div>
+    <div class="touch-tab" data-touch-tab="komparsen">Komparsen</div>
+    <div class="touch-tab-spacer"></div>
+    <div class="touch-new-btn" onclick="touchNeuePersonOeffnen()">+ Neuer Teilnehmer</div>
+  </div>
+
+  <!-- PANEL: Catering Liste -->
+  <div class="touch-panel active" id="touch-panel-catering">
+    <div class="touch-search-bar">
+      <div class="touch-search-wrap">
+        <span class="touch-search-icon">⌕</span>
+        <input type="text" id="touch-suche" placeholder="Nachname finden…"
+          oninput="touchSuche()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+        <button class="touch-search-clear" id="touch-suche-clear" onclick="touchSucheLeeren()" style="display:none">×</button>
+      </div>
+    </div>
+    <div class="touch-list" id="touch-list">
+      <div style="color:var(--muted);font-size:15px;text-align:center;padding:32px 0">
+        Namen eingeben um zu suchen…
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL: Komparsen -->
+  <div class="touch-panel" id="touch-panel-komparsen">
+    <div class="touch-komp-panel">
+      <div class="touch-komp-label">Komparsen</div>
+      <div class="touch-komp-stepper">
+        <button class="touch-komp-btn" onclick="touchStepperChange(-1)">−</button>
+        <input class="touch-komp-val" type="number" id="touch-komp-input" min="0" value="0"
+          onfocus="this.select()" oninput="touchZaehlerSpeichern()">
+        <button class="touch-komp-btn" onclick="touchStepperChange(1)">+</button>
+      </div>
+      <div class="touch-save-indicator" id="touch-komp-status">–</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Neue Person Dialog (Touch) -->
+<div class="touch-new-dialog" id="touch-new-dialog">
+  <div class="touch-new-sheet">
+    <h3>Neuer Teilnehmer</h3>
+    <div class="field" style="margin-bottom:10px">
+      <label style="font-size:11px;margin-bottom:4px">Nachname / Firma</label>
+      <input type="text" id="touch-new-nachname" placeholder="Name / Firma" style="font-size:17px;padding:10px 12px">
+    </div>
+    <div class="field" style="margin-bottom:10px">
+      <label style="font-size:11px;margin-bottom:4px">Vorname</label>
+      <input type="text" id="touch-new-vorname" placeholder="Vorname" style="font-size:17px;padding:10px 12px">
+    </div>
+    <div class="field" style="margin-bottom:16px">
+      <label style="font-size:11px;margin-bottom:4px">Abteilung</label>
+      <select id="touch-new-abt" style="font-size:17px;padding:10px 12px">
+          <option value="">– Abteilung –</option>
+          <option value="01 Regie">01 Regie</option>
+          <option value="02 Produktion">02 Produktion</option>
+          <option value="03 Kamera / Ton">03 Kamera / Ton</option>
+          <option value="04 Kostüm">04 Kostüm</option>
+          <option value="05 Licht">05 Licht</option>
+          <option value="06 Maske">06 Maske</option>
+          <option value="07 Szenenbild">07 Szenenbild</option>
+          <option value="08 Produzenten">08 Produzenten</option>
+          <option value="09 Cast">09 Cast</option>
+          <option value="10 Komparsen">10 Komparsen</option>
+          <option value="11 Gäste">11 Gäste</option>
+          <option value="12 Sonstige">12 Sonstige</option>
+      </select>
+    </div>
+    <div class="autosave-bar" id="touch-new-status" style="display:none;padding:4px 0 8px">
+      <div class="autosave-dot saving"></div>
+      <span>Ich speichere…</span>
+    </div>
+    <div class="error-msg" id="touch-new-error"></div>
+    <div style="display:flex;gap:10px;margin-top:4px">
+      <button class="btn btn-primary btn-sm" id="touch-new-save-btn" onclick="touchPersonAnlegen()" style="flex:1;font-size:16px;padding:12px">Anlegen & eintragen</button>
+      <button class="btn btn-ghost btn-sm" onclick="touchNeuePersonSchliessen()" style="font-size:15px">Abbrechen</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ══ KONFIGURATION ══════════════════════════════════════════
 const API_URL = "https://script.google.com/macros/s/AKfycbz_cB6Sol25skRKJWQeG_3y5JHG2iBmREnilLxKx1WDqT8r3yLlgcNnV-j-2dt2yALD/exec";
@@ -513,13 +668,20 @@ async function login() {
       document.getElementById("login-projekt").textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
       document.getElementById("topbar-projekt").textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
       document.getElementById("login-screen").style.display="none";
-      document.getElementById("app").classList.add("active");
       allePersonen=sortNachname(mapPersonen(res.personen));
-      // Alle Personen mit jemals einer Teilnahme laden
       if(res.personenMitTeilnahme) personenMitTeilnahme = new Set(res.personenMitTeilnahme);
       heuteDatum(); await datumWechseln();
-      renderPersonenverwaltung();
-      document.getElementById("monat-input").value=heute().slice(0,7);
+      // Touch-Gerät → Touch Interface, Desktop → normales Interface
+      const isTouch = navigator.maxTouchPoints > 0 ||
+                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if(isTouch) {
+        document.getElementById("app-touch").classList.add("active");
+        touchInit();
+      } else {
+        document.getElementById("app").classList.add("active");
+        renderPersonenverwaltung();
+        document.getElementById("monat-input").value=heute().slice(0,7);
+      }
     } else {
       document.getElementById("login-error").textContent="Falsches Passwort"; SESSION_PW="";
     }
@@ -567,6 +729,7 @@ function logout() {
   SESSION_PW="";
   document.getElementById("login-screen").style.display="flex";
   document.getElementById("app").classList.remove("active");
+  document.getElementById("app-touch").classList.remove("active");
   document.getElementById("pw-input").value="";
 }
 
@@ -1525,6 +1688,218 @@ function pdfExport() {
 
   doc.save(`catering_${monat}${projekt.replace(" · ","_")}.pdf`);
   toast("PDF exportiert");
+}
+
+
+// ══ TOUCH INTERFACE JS ══════════════════════════════════════
+
+let touchZaehlerTimer = null;
+
+function touchInit() {
+  // Datum in Tab-Überschrift
+  const h = heute();
+  const el = document.getElementById("touch-datum-tab");
+  if(el) el.textContent = formatDatumMitTag(h);
+
+  // Projektkürzel
+  const proj = document.getElementById("touch-projekt");
+  if(proj) proj.textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
+
+  // Komparsen-Wert laden
+  const komp = parseInt(document.getElementById("komparsen-input")?.value)||0;
+  const ti = document.getElementById("touch-komp-input");
+  if(ti) ti.value = komp;
+
+  // Long-press auf Touch-Brand
+  const brand = document.getElementById("touch-brand-btn");
+  if(brand) {
+    let t = null;
+    brand.addEventListener("touchstart", ()=>{ t=setTimeout(()=>{ touchZuUebersicht(); },3000); }, {passive:true});
+    brand.addEventListener("touchend",   ()=>clearTimeout(t));
+    brand.addEventListener("touchcancel",()=>clearTimeout(t));
+  }
+
+  // Tab-Wechsel
+  document.querySelectorAll(".touch-tab[data-touch-tab]").forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      document.querySelectorAll(".touch-tab").forEach(t=>t.classList.remove("active"));
+      document.querySelectorAll(".touch-panel").forEach(p=>p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("touch-panel-"+tab.dataset.touchTab).classList.add("active");
+    });
+  });
+}
+
+function touchZuUebersicht() {
+  // Wechsel zu Desktop-App für Übersicht
+  document.getElementById("app-touch").classList.remove("active");
+  document.getElementById("app").classList.add("active");
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
+  const exportTab = document.querySelector('[data-tab="export"]');
+  if(exportTab) {
+    exportTab.classList.add("active");
+    exportTab.style.display="flex";
+  }
+  document.getElementById("tab-export")?.classList.add("active");
+  ladeVerfuegbareMonate();
+  toast("Übersicht");
+}
+
+function touchSuche() {
+  const val = document.getElementById("touch-suche").value;
+  document.getElementById("touch-suche-clear").style.display = val ? "flex" : "none";
+  touchRenderListe(val.toLowerCase().trim());
+}
+
+function touchSucheLeeren() {
+  document.getElementById("touch-suche").value = "";
+  document.getElementById("touch-suche-clear").style.display = "none";
+  document.getElementById("touch-list").innerHTML =
+    '<div style="color:var(--muted);font-size:15px;text-align:center;padding:32px 0">Namen eingeben um zu suchen…</div>';
+}
+
+function touchRenderListe(suche) {
+  const container = document.getElementById("touch-list");
+  if(!suche || suche.length < 1) {
+    container.innerHTML = '<div style="color:var(--muted);font-size:15px;text-align:center;padding:32px 0">Namen eingeben um zu suchen…</div>';
+    return;
+  }
+
+  // Nur Wortanfänge
+  const treffer = allePersonen.filter(p => {
+    return p.nachname.toLowerCase().startsWith(suche) ||
+           (p.vorname||"").toLowerCase().startsWith(suche);
+  });
+
+  if(treffer.length === 0) {
+    // Kein Treffer → Anlegen anbieten
+    const anzeige = suche.charAt(0).toUpperCase() + suche.slice(1);
+    container.innerHTML = `
+      <div class="touch-no-result">Kein Eintrag gefunden für „${anzeige}"</div>
+      <div class="touch-add-hint" onclick="touchNeuePersonOeffnen('${anzeige}')">
+        <div class="hint-name">+ ${anzeige} anlegen</div>
+        <div class="hint-sub">Als neuen Teilnehmer eintragen</div>
+      </div>`;
+    return;
+  }
+
+  const datum = heute();
+  container.innerHTML = treffer.map(p => {
+    const an = anwesendHeute.has(p.id);
+    const name = p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname;
+    return `<div class="touch-person-row${an?" checked":""}" onclick="touchToggle('${p.id}')">
+      <div class="touch-checkbox">${an?"✓":""}</div>
+      <div style="flex:1;min-width:0">
+        <div class="touch-person-name">${p.nachname}${p.vorname?", <span style='font-weight:400;color:var(--muted)'>"+p.vorname+"</span>":""}</div>
+        ${p.position?`<div class="touch-person-pos">${p.position}</div>`:""}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function touchToggle(id) {
+  // Gleiche Logik wie normales toggle
+  toggle(id);
+  // Liste neu rendern
+  setTimeout(()=>touchSuche(), 100);
+  // Status aktualisieren
+  touchSaveStatusAktualisieren();
+}
+
+function touchSaveStatusAktualisieren() {
+  const el = document.getElementById("touch-save-status");
+  if(!el) return;
+  const dot = document.getElementById("autosave-dot");
+  if(dot) {
+    if(dot.classList.contains("saved"))   el.textContent = "✓";
+    else if(dot.classList.contains("saving")) el.textContent = "…";
+    else if(dot.classList.contains("err"))    el.textContent = "⚠";
+    else el.textContent = "";
+  }
+}
+
+// Komparsen Stepper
+function touchStepperChange(delta) {
+  const inp = document.getElementById("touch-komp-input");
+  const val = parseInt(inp.value)||0;
+  inp.value = Math.max(0, val + delta);
+  // Sync mit Haupt-Stepper
+  const mainInp = document.getElementById("komparsen-input");
+  if(mainInp) mainInp.value = inp.value;
+  touchZaehlerSpeichern();
+}
+
+function touchZaehlerSpeichern() {
+  const inp = document.getElementById("touch-komp-input");
+  const mainInp = document.getElementById("komparsen-input");
+  if(mainInp) mainInp.value = inp.value;
+  const datum = heute();
+  const status = document.getElementById("touch-komp-status");
+  if(status) status.textContent = "Speichere…";
+  clearTimeout(touchZaehlerTimer);
+  touchZaehlerTimer = setTimeout(async ()=>{
+    const wert = parseInt(inp.value)||0;
+    try {
+      const res = await api("setZaehler", {datum, pid:"KOMP01", name:"Komparsen", abteilung:"10 Komparsen", wert});
+      if(status) status.textContent = res.ok ? `Gespeichert ✓` : "Fehler";
+    } catch(e) {
+      if(status) status.textContent = "Offline";
+    }
+  }, 800);
+}
+
+// Neue Person
+function touchNeuePersonOeffnen(vorname="") {
+  document.getElementById("touch-new-dialog").classList.add("open");
+  document.getElementById("touch-new-error").textContent = "";
+  document.getElementById("touch-new-status").style.display = "none";
+  // Suchbegriff als Nachname vorausfüllen
+  const suche = document.getElementById("touch-suche").value.trim();
+  document.getElementById("touch-new-nachname").value = suche ? suche.charAt(0).toUpperCase()+suche.slice(1) : "";
+  document.getElementById("touch-new-vorname").value = "";
+  document.getElementById("touch-new-abt").selectedIndex = 0;
+  setTimeout(()=>document.getElementById("touch-new-nachname").focus(), 100);
+}
+
+function touchNeuePersonSchliessen() {
+  document.getElementById("touch-new-dialog").classList.remove("open");
+}
+
+async function touchPersonAnlegen() {
+  const nachname = document.getElementById("touch-new-nachname").value.trim();
+  const vorname  = document.getElementById("touch-new-vorname").value.trim();
+  const abteilung = document.getElementById("touch-new-abt").value;
+  if(!nachname) { document.getElementById("touch-new-error").textContent = "Nachname erforderlich"; return; }
+
+  const btn = document.getElementById("touch-new-save-btn");
+  btn.disabled = true;
+  document.getElementById("touch-new-status").style.display = "flex";
+  document.getElementById("touch-new-error").textContent = "";
+
+  const name = vorname ? `${nachname}, ${vorname}` : nachname;
+  try {
+    const res = await api("addPerson", {name, abteilung, rolle:""});
+    if(res.ok) {
+      // Person zu lokaler Liste hinzufügen
+      allePersonen = sortNachname([...allePersonen, {id:res.id, nachname, vorname, position:abteilung}]);
+      // Sofort als anwesend markieren
+      toggle(res.id);
+      touchNeuePersonSchliessen();
+      // Suche auf neuen Namen setzen
+      document.getElementById("touch-suche").value = nachname;
+      document.getElementById("touch-suche-clear").style.display = "flex";
+      touchSuche();
+      toast(`${name} angelegt & eingetragen`);
+    } else {
+      document.getElementById("touch-new-error").textContent = res.error||"Fehler";
+    }
+  } catch(e) {
+    document.getElementById("touch-new-error").textContent = "Verbindungsfehler";
+  } finally {
+    btn.disabled = false;
+    document.getElementById("touch-new-status").style.display = "none";
+  }
 }
 </script>
 </body>

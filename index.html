@@ -284,7 +284,7 @@ body.is-touch .tabs{padding:0 4px}
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
     <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.6</div>
-    <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
+    <button class="btn-icon" onclick="logout()" title="Abmelden" style="font-size:20px">⏻</button>
   </div>
   <div class="tabs">
     <div class="tab active" data-tab="anwesenheit">Teilnahme</div>
@@ -505,9 +505,9 @@ body.is-touch .tabs{padding:0 4px}
 
   <!-- Topbar -->
   <div class="touch-topbar">
-    <div class="touch-brand" id="touch-brand-btn">Catering <span id="touch-projekt" style="opacity:.7;font-size:11px"></span></div>
+    <div class="touch-brand" id="touch-brand-btn" style="font-size:17px">Catering <span id="touch-projekt" style="opacity:.7;font-size:13px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
-    <span style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 1.6</span>
+    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 1.6</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)">↩</button>
   </div>
 
@@ -515,9 +515,9 @@ body.is-touch .tabs{padding:0 4px}
   <div style="background:var(--surface);border-bottom:1.5px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06)">
     <!-- Erste Zeile: Überschrift = Tab Catering Liste -->
     <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering"
-      style="display:block;text-align:center;padding:14px 16px 10px;border-bottom:none;width:100%;font-size:15px">
-      <div style="font-size:22px;font-weight:700;color:var(--text);line-height:1.2">Catering Liste</div>
-      <div style="font-size:16px;font-weight:500;color:var(--accent);margin-top:2px" id="touch-datum-header"></div>
+      style="display:block;text-align:center;padding:14px 16px 10px;border-bottom:none;width:100%;font-size:15px;background:linear-gradient(135deg,#e8f4ed 0%,#d0ead8 100%)">
+      <div style="font-size:26px;font-weight:700;color:var(--text);line-height:1.2">Catering Liste</div>
+      <div style="font-size:18px;font-weight:600;color:var(--accent);margin-top:3px" id="touch-datum-header"></div>
     </div>
     <!-- Zweite Zeile: Komparsen links, Neuer Teilnehmer rechts -->
     <div style="display:flex;align-items:center;padding:0 12px 0;border-top:1px solid var(--border)">
@@ -531,13 +531,13 @@ body.is-touch .tabs{padding:0 4px}
 
   <!-- PANEL: Catering Liste -->
   <div class="touch-panel active" id="touch-panel-catering">
-    <div style="padding:20px 16px 12px;background:var(--bg)">
-      <div style="position:relative">
-        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:36px;color:var(--muted);pointer-events:none;line-height:1">⌕</span>
+    <div style="padding:18px 16px 12px;background:var(--bg);display:flex;justify-content:center">
+      <div style="position:relative;width:85%;max-width:480px">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:32px;color:var(--accent);pointer-events:none;line-height:1">⌕</span>
         <input type="text" id="touch-suche" placeholder="Nachname finden…"
           oninput="touchSuche()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
-          style="width:100%;padding:18px 50px 18px 60px;font-size:22px;border:2px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);font-family:var(--sans);outline:none;-webkit-appearance:none">
-        <button id="touch-suche-clear" onclick="touchSucheLeeren()" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--border);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;color:var(--muted);cursor:pointer;align-items:center;justify-content:center">×</button>
+          style="width:100%;padding:16px 44px 16px 54px;font-size:20px;border:2px solid var(--green-brd);border-radius:12px;background:#e8f4ed;color:var(--text);font-family:var(--sans);outline:none;-webkit-appearance:none">
+        <button id="touch-suche-clear" onclick="touchSucheLeeren()" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--border);border:none;border-radius:50%;width:30px;height:30px;font-size:16px;color:var(--muted);cursor:pointer;align-items:center;justify-content:center">×</button>
       </div>
     </div>
     <div class="touch-list" id="touch-list">
@@ -995,6 +995,7 @@ function toggle(id) {
   const war = anwesendHeute.has(id);
   if(war) anwesendHeute.delete(id); else anwesendHeute.add(id);
   renderListe();
+  zeigeGespeichertBestaetigung(); // Sofortiges Feedback
   const p = allePersonen.find(x=>x.id===id);
   if(!p) return;
   const datum = document.getElementById("datum-input").value;

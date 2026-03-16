@@ -148,6 +148,9 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
 
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--surface);border-radius:24px;padding:12px 24px;font-size:15px;font-weight:500;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;white-space:nowrap;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.18)}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* Gespeichert-Bestätigung */
+.saved-flash{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:var(--green);color:#fff;border-radius:16px;padding:20px 40px;font-size:24px;font-weight:700;opacity:0;pointer-events:none;z-index:998;transition:opacity .15s,transform .15s;box-shadow:0 4px 24px rgba(26,107,60,.4)}
+.saved-flash.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 /* Autosave-Fehler: roter Balken oben */
 .save-error-bar{position:fixed;top:0;left:0;right:0;background:var(--red);color:#fff;font-size:13px;font-weight:600;text-align:center;padding:6px 16px;z-index:300;cursor:pointer;animation:slidedown .3s ease}
 @keyframes slidedown{from{transform:translateY(-100%)}to{transform:translateY(0)}}
@@ -261,7 +264,7 @@ body.is-touch .tabs{padding:0 4px}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="login-logo">Film · Set</div>
       <div style="text-align:right;font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em;line-height:1.6">
-        <div>V 1.3</div>
+        <div>V 1.6</div>
         <div style="font-size:10px">© JH 2026</div>
       </div>
     </div>
@@ -280,7 +283,7 @@ body.is-touch .tabs{padding:0 4px}
     <button class="btn-icon" id="topbar-back-touch" onclick="zurückZuTouch()" title="Zurück zur mobilen Ansicht" style="display:none;font-size:22px;color:var(--accent)">←</button>
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.3</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 1.6</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden">↩</button>
   </div>
   <div class="tabs">
@@ -473,6 +476,7 @@ body.is-touch .tabs{padding:0 4px}
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="saved-flash" id="saved-flash">✓ Gespeichert</div>
 
 <!-- Fehler-Overlay -->
 <div id="fehler-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;align-items:center;justify-content:center;padding:20px">
@@ -503,32 +507,41 @@ body.is-touch .tabs{padding:0 4px}
   <div class="touch-topbar">
     <div class="touch-brand" id="touch-brand-btn">Catering <span id="touch-projekt" style="opacity:.7;font-size:11px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
-    <span style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 1.3</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 1.6</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)">↩</button>
   </div>
 
-  <!-- Tabs -->
-  <div class="touch-tabs">
-    <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering">
-      Cateringliste vom <span id="touch-datum-tab"></span>
+  <!-- Header-Bereich -->
+  <div style="background:var(--surface);border-bottom:1.5px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06)">
+    <!-- Erste Zeile: Überschrift = Tab Catering Liste -->
+    <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering"
+      style="display:block;text-align:center;padding:14px 16px 10px;border-bottom:none;width:100%;font-size:15px">
+      <div style="font-size:22px;font-weight:700;color:var(--text);line-height:1.2">Catering Liste</div>
+      <div style="font-size:16px;font-weight:500;color:var(--accent);margin-top:2px" id="touch-datum-header"></div>
     </div>
-    <div class="touch-tab" data-touch-tab="komparsen">Komparsen</div>
-    <div class="touch-tab-spacer"></div>
-    <div class="touch-new-btn" onclick="touchNeuePersonOeffnen()">+ Neuer Teilnehmer</div>
+    <!-- Zweite Zeile: Komparsen links, Neuer Teilnehmer rechts -->
+    <div style="display:flex;align-items:center;padding:0 12px 0;border-top:1px solid var(--border)">
+      <div class="touch-tab" data-touch-tab="komparsen" style="font-size:15px;padding:10px 14px">
+        Komparsen
+      </div>
+      <div style="flex:1"></div>
+      <div class="touch-new-btn" onclick="touchNeuePersonOeffnen()">+ Neuer Teilnehmer</div>
+    </div>
   </div>
 
   <!-- PANEL: Catering Liste -->
   <div class="touch-panel active" id="touch-panel-catering">
-    <div class="touch-search-bar">
-      <div class="touch-search-wrap">
-        <span class="touch-search-icon">⌕</span>
+    <div style="padding:20px 16px 12px;background:var(--bg)">
+      <div style="position:relative">
+        <span style="position:absolute;left:14px;top:50%;transform:translateY(-50%);font-size:36px;color:var(--muted);pointer-events:none;line-height:1">⌕</span>
         <input type="text" id="touch-suche" placeholder="Nachname finden…"
-          oninput="touchSuche()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
-        <button class="touch-search-clear" id="touch-suche-clear" onclick="touchSucheLeeren()" style="display:none">×</button>
+          oninput="touchSuche()" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+          style="width:100%;padding:18px 50px 18px 60px;font-size:22px;border:2px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);font-family:var(--sans);outline:none;-webkit-appearance:none">
+        <button id="touch-suche-clear" onclick="touchSucheLeeren()" style="display:none;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--border);border:none;border-radius:50%;width:32px;height:32px;font-size:18px;color:var(--muted);cursor:pointer;align-items:center;justify-content:center">×</button>
       </div>
     </div>
     <div class="touch-list" id="touch-list">
-      <div style="color:var(--muted);font-size:15px;text-align:center;padding:32px 0">
+      <div style="color:var(--muted);font-size:16px;text-align:center;padding:40px 0">
         Namen eingeben um zu suchen…
       </div>
     </div>
@@ -789,14 +802,19 @@ function schnellNeuPerson() {
 // Debounce-Timer pro Zähler
 const zaehlerTimer = {};
 
-// Touch-Gerät erkennen (auch iPad mit Desktop-Mode)
+// Gerät erkennen
 (function(){
-  const isTouch = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
-  const isIpad = /iPad/.test(navigator.userAgent) || 
-                 (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-  if(isTouch || isIpad) {
-    document.body.classList.add("is-touch");
-  }
+  const ua = navigator.userAgent;
+  const isIphone = /iPhone/.test(ua);
+  const isIpod   = /iPod/.test(ua);
+  const isIpad   = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isTouch  = navigator.maxTouchPoints > 0 || 'ontouchstart' in window;
+  if(isIphone) document.body.dataset.device = "iphone";
+  else if(isIpod) document.body.dataset.device = "ipod";
+  else if(isIpad) document.body.dataset.device = "ipad";
+  else if(isTouch) document.body.dataset.device = "touch";
+  else document.body.dataset.device = "desktop";
+  if(isTouch || isIpad) document.body.classList.add("is-touch");
 })();
 
 function stepperChange(id, delta) {
@@ -1006,6 +1024,7 @@ async function verarbeiteToggleQueue() {
       });
       if(res.ok) {
         if(an) personenMitTeilnahme.add(pid);
+        zeigeGespeichertBestaetigung();
       } else {
         // Rollback dieses Eintrags
         if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
@@ -1086,6 +1105,15 @@ async function autosave() {
       setTimeout(autosave, 300);
     }
   }
+}
+
+let savedFlashTimer = null;
+function zeigeGespeichertBestaetigung() {
+  const el = document.getElementById("saved-flash");
+  if(!el) return;
+  clearTimeout(savedFlashTimer);
+  el.classList.add("show");
+  savedFlashTimer = setTimeout(() => el.classList.remove("show"), 900);
 }
 
 function zeigeFehlerOverlay(text) {
@@ -1707,13 +1735,15 @@ function pdfExport() {
 let touchZaehlerTimer = null;
 
 function touchInit() {
-  // Datum in Tab-Überschrift — nur TT.MM.JJJJ
+  // Datum in Header und Tab
   const h = heute();
+  const monate = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+  const [y,m,t] = h.split("-");
+  const datumText = `${parseInt(t)}. ${monate[parseInt(m)-1]}`;
   const el = document.getElementById("touch-datum-tab");
-  if(el) {
-    const [y,m,t] = h.split("-");
-    el.textContent = `${t}.${m}.${y}`;
-  }
+  if(el) el.textContent = `${parseInt(t)}.${m}.${y}`;
+  const hdr = document.getElementById("touch-datum-header");
+  if(hdr) hdr.textContent = `vom ${datumText}`;
 
   // Projektkürzel
   const proj = document.getElementById("touch-projekt");

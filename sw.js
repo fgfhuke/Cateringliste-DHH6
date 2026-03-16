@@ -1,22 +1,20 @@
-// ══ CATERING SERVICE WORKER v3 ══════════════════════════
-const CACHE_NAME = "catering-v3";
+// ══ CATERING SERVICE WORKER v4 ══════════════════════════
+// Strategie: index.html cachen ABER im Hintergrund immer aktualisieren
+const CACHE_NAME = "catering-v4";
 
-// Nur externe Bibliotheken cachen — NICHT index.html
-const CACHE_EXTERN = [
-  "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
-  "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"
-];
-
-// Installation
 self.addEventListener("install", event => {
   event.waitUntil(
     caches.open(CACHE_NAME).then(cache =>
-      Promise.allSettled(CACHE_EXTERN.map(url => cache.add(url).catch(() => {})))
+      // index.html und externe Libs beim ersten Laden cachen
+      Promise.allSettled([
+        cache.add("./index.html"),
+        cache.add("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"),
+        cache.add("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js")
+      ])
     ).then(() => self.skipWaiting())
   );
 });
 
-// Aktivierung: alten Cache löschen
 self.addEventListener("activate", event => {
   event.waitUntil(
     caches.keys()
@@ -25,11 +23,10 @@ self.addEventListener("activate", event => {
   );
 });
 
-// Fetch-Strategie
 self.addEventListener("fetch", event => {
   const url = new URL(event.request.url);
 
-  // Google Apps Script API → immer Network, nie cachen
+  // Google Apps Script API → immer Network
   if (url.hostname.includes("script.google.com")) {
     event.respondWith(
       fetch(event.request).catch(() =>
@@ -41,50 +38,47 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  // index.html → IMMER frisch vom Netz (enthält API-URL!)
-  if (url.pathname.endsWith("/") || url.pathname.endsWith("index.html")) {
+  // index.html → Stale-While-Revalidate
+  // Sofort aus Cache liefern, im Hintergrund aktualisieren
+  if (url.pathname.endsWith("/") || url.pathname.endsWith("index.html") || url.pathname === "/Cateringliste-DHH6/") {
     event.respondWith(
-      fetch(event.request).catch(() =>
-        // Nur als Notfall-Fallback den Cache nutzen
-        caches.match(event.request)
-      )
-    );
-    return;
-  }
+      caches.open(CACHE_NAME).then(cache =>
+        cache.match("./index.html").then(cached => {
+          // Im Hintergrund aktualisieren wenn online
+          const fetchPromise = fetch(event.request).then(response => {
+            if (response && response.status === 200) {
+              cache.put("./index.html", response.clone());
+            }
+            return response;
+          }).catch(() => null);
 
-  // Externe Bibliotheken (jsPDF etc.) → Cache-First
-  if (url.hostname.includes("cdnjs.cloudflare.com")) {
-    event.respondWith(
-      caches.match(event.request).then(cached =>
-        cached || fetch(event.request).then(response => {
-          if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
-          }
-          return response;
+          // Gecachte Version sofort zurückgeben
+          // Wenn nicht gecacht → auf Netz warten
+          return cached || fetchPromise;
         })
       )
     );
     return;
   }
 
-  // Google Fonts → Cache-First
-  if (url.hostname.includes("fonts.googleapis.com") || url.hostname.includes("fonts.gstatic.com")) {
+  // Externe Libs → Cache-First
+  if (url.hostname.includes("cdnjs.cloudflare.com") ||
+      url.hostname.includes("fonts.googleapis.com") ||
+      url.hostname.includes("fonts.gstatic.com")) {
     event.respondWith(
       caches.match(event.request).then(cached =>
         cached || fetch(event.request).then(response => {
           if (response && response.status === 200) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+            caches.open(CACHE_NAME).then(c => c.put(event.request, response.clone()));
           }
           return response;
-        }).catch(() => cached)
+        }).catch(() => new Response("", {status: 503}))
       )
     );
     return;
   }
 
-  // Alles andere (apple-touch-icon etc.) → Network mit Cache-Fallback
+  // Alles andere → Network mit Cache-Fallback
   event.respondWith(
     fetch(event.request).catch(() => caches.match(event.request))
   );

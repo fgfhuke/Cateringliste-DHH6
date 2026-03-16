@@ -1,0 +1,18 @@
+{
+  "name": "Catering Liste",
+  "short_name": "Catering",
+  "description": "Film-Set Catering Anwesenheitsliste",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f5f4f0",
+  "theme_color": "#1a6b3c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

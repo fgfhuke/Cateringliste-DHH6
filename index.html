@@ -268,7 +268,7 @@ body.is-touch .tabs{padding:0 4px}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="login-logo">Film · Set</div>
       <div style="text-align:right;font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em;line-height:1.6">
-        <div>V 2.2</div>
+        <div>V 2.3</div>
         <div style="font-size:10px">© JH 2026</div>
       </div>
     </div>
@@ -288,7 +288,7 @@ body.is-touch .tabs{padding:0 4px}
     <button class="btn-icon" id="topbar-back-touch" onclick="zurückZuTouch()" title="Zurück zur mobilen Ansicht" style="display:none;font-size:22px;color:var(--accent)">←</button>
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.2</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.3</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
   <div class="tabs">
@@ -514,7 +514,7 @@ body.is-touch .tabs{padding:0 4px}
   <div class="touch-topbar">
     <div class="touch-brand" id="touch-brand-btn" style="font-size:17px">Catering <span id="touch-projekt" style="opacity:.7;font-size:13px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
-    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 2.2</span>
+    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 2.3</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
 
@@ -1249,6 +1249,8 @@ function zeigeGespeichertBestaetigung() {
 }
 
 function zeigeFehlerOverlay(text) {
+  // Im Offline-Modus kein Fehler-Overlay — die Offline-Queue kümmert sich darum
+  if(istOffline) return;
   document.getElementById("fehler-text").textContent = text;
   document.getElementById("fehler-overlay").style.display = "flex";
 }
@@ -1258,9 +1260,19 @@ function fehlerOverlaySchliessen() {
 }
 
 async function fehlerRetry() {
-  if(!letzterSpeicherversuch) { fehlerOverlaySchliessen(); return; }
   fehlerOverlaySchliessen();
-  // Nochmal versuchen mit denselben Daten
+  if(!letzterSpeicherversuch) return;
+  // Offline? → in Queue speichern
+  if(istOffline || !navigator.onLine) {
+    const d = letzterSpeicherversuch;
+    d.eintraege.forEach(e => {
+      offlineQueueHinzufuegen({datum:d.datum, pid:e.id, an:true, name:e.name, abteilung:e.abteilung});
+    });
+    letzterSpeicherversuch = null;
+    setAutosaveStatus("offline");
+    toast("In Offline-Queue gespeichert — wird synchronisiert wenn online");
+    return;
+  }
   setAutosaveStatus("saving");
   try {
     const params = new URLSearchParams({
@@ -1280,8 +1292,16 @@ async function fehlerRetry() {
       zeigeFehlerOverlay("Retry fehlgeschlagen: " + (res.error||""));
     }
   } catch(e) {
-    setAutosaveStatus("err");
-    zeigeFehlerOverlay("Retry fehlgeschlagen: " + e.message);
+    // Auch hier offline
+    istOffline = true;
+    offlineBannerAktualisieren();
+    if(letzterSpeicherversuch) {
+      letzterSpeicherversuch.eintraege.forEach(ev => {
+        offlineQueueHinzufuegen({datum:letzterSpeicherversuch.datum, pid:ev.id, an:true, name:ev.name, abteilung:ev.abteilung});
+      });
+      letzterSpeicherversuch = null;
+    }
+    setAutosaveStatus("offline");
   }
 }
 

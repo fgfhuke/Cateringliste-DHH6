@@ -47,8 +47,8 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 .btn-icon{padding:8px;background:transparent;color:var(--muted);border:none;font-size:20px;cursor:pointer;line-height:1}
 .btn-icon:hover{color:var(--text)}
 
-#app{display:none;height:100dvh;flex-direction:column;background:var(--bg);overflow:hidden}
-#app.active{display:flex}
+#app{display:none;height:100dvh;flex-direction:column;overflow:hidden}
+#app.active{display:flex;flex-direction:column;overflow:hidden}
 
 .topbar{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 16px;height:58px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .topbar-brand{font-family:var(--mono);font-size:13px;font-weight:500;letter-spacing:.1em;color:var(--accent);text-transform:uppercase;flex:1}
@@ -59,7 +59,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab:hover:not(.active){color:var(--text)}
 
-.panel{display:none;flex:1;overflow-y:auto;padding-bottom:120px;scroll-padding-top:16px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.panel{display:none;flex:1;overflow-y:auto;padding-bottom:120px;scroll-padding-top:16px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;min-height:0;width:100%}
 .panel.active{display:block}
 .content{padding:16px;max-width:680px;margin:0 auto}
 
@@ -146,7 +146,6 @@ textarea{resize:vertical;min-height:120px;font-family:var(--mono);font-size:15px
 .export-table .row-group td.col-name{background:#e8e6de;position:sticky;left:0;z-index:2}
 .anzahl-badge{font-family:var(--mono);font-size:11px;font-weight:700;color:var(--accent)}
 
-
 /* Offline-Banner */
 .offline-banner{display:none;position:fixed;top:0;left:0;right:0;background:#555;color:#fff;font-size:14px;font-weight:600;text-align:center;padding:8px 16px;z-index:400;font-family:var(--mono)}
 .offline-banner.show{display:block}
@@ -201,7 +200,7 @@ body.is-touch .tabs{padding:0 4px}
 .alpha-divider.abt-group.kompakt{font-size:13px;font-weight:700;color:#d4740a;padding:6px 4px 3px;letter-spacing:.02em;border-bottom:1.5px solid var(--border2);margin-bottom:1px}
 
 /* ══ TOUCH INTERFACE (iPad/iPhone) ══ */
-#app-touch{display:none;height:100dvh;flex-direction:column;background:var(--bg);overflow:hidden}
+#app-touch{display:none;height:100dvh;flex-direction:column;overflow:hidden}
 #app-touch.active{display:flex}
 
 .touch-topbar{background:var(--surface);border-bottom:1.5px solid var(--border);padding:0 16px;height:54px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.06)}
@@ -268,7 +267,7 @@ body.is-touch .tabs{padding:0 4px}
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
       <div class="login-logo">Film · Set</div>
       <div style="text-align:right;font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em;line-height:1.6">
-        <div>V 2.6</div>
+        <div>V 4.1</div>
         <div style="font-size:10px">© JH 2026</div>
       </div>
     </div>
@@ -288,7 +287,7 @@ body.is-touch .tabs{padding:0 4px}
     <button class="btn-icon" id="topbar-back-touch" onclick="zurückZuTouch()" title="Zurück zur mobilen Ansicht" style="display:none;font-size:22px;color:var(--accent)">←</button>
     <div class="topbar-brand" id="topbar-brand-btn" style="cursor:pointer;user-select:none;-webkit-user-select:none">Catering <span id="topbar-projekt" style="opacity:0.7;font-size:11px"></span></div>
     <div class="topbar-date" id="topbar-date"></div>
-    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 2.6</div>
+    <div style="font-family:var(--mono);font-size:11px;color:var(--border2);letter-spacing:0.08em">V 4.1</div>
     <button class="btn-icon" onclick="logout()" title="Abmelden" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
   <div class="tabs">
@@ -318,9 +317,9 @@ body.is-touch .tabs{padding:0 4px}
       </div>
       <button class="btn btn-ghost btn-sm" onclick="heuteDatum()">Heute</button>
     </div>
-    <!-- Stepper: Komparsen + Gäste -->
-    <div style="display:flex;gap:8px;margin-bottom:8px">
-      <div style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:8px 10px;box-shadow:var(--shadow)">
+    <!-- Stepper: Komparsen -->
+    <div style="margin-bottom:8px">
+      <div style="background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:8px 10px;box-shadow:var(--shadow);max-width:200px">
         <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Komparsen</div>
         <div class="stepper">
           <button class="stepper-btn" onclick="stepperChange('komparsen-input',-1)">−</button>
@@ -328,15 +327,9 @@ body.is-touch .tabs{padding:0 4px}
           <button class="stepper-btn" onclick="stepperChange('komparsen-input',1)">+</button>
         </div>
       </div>
-      <div style="flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r);padding:8px 10px;box-shadow:var(--shadow)">
-        <div style="font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Gäste</div>
-        <div class="stepper">
-          <button class="stepper-btn" onclick="stepperChange('gaeste-input',-1)">−</button>
-          <input class="stepper-val" type="number" id="gaeste-input" min="0" value="0">
-          <button class="stepper-btn" onclick="stepperChange('gaeste-input',1)">+</button>
-        </div>
-      </div>
     </div>
+    <!-- Gäste-Input versteckt (für Fallback-Funktionen) -->
+    <input type="hidden" id="gaeste-input" value="0">
     <div class="autosave-bar" style="padding:2px 0 6px">
       <div class="autosave-dot" id="autosave-dot"></div>
       <span id="autosave-text">–</span>
@@ -514,15 +507,16 @@ body.is-touch .tabs{padding:0 4px}
   <div class="touch-topbar">
     <div class="touch-brand" id="touch-brand-btn" style="font-size:17px">Catering <span id="touch-projekt" style="opacity:.7;font-size:13px"></span></div>
     <span class="touch-save-status" id="touch-save-status"></span>
-    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 2.6</span>
+    <span style="font-family:var(--mono);font-size:13px;color:var(--border2);letter-spacing:.08em" id="touch-version">V 4.1</span>
     <button class="btn-icon" onclick="logout()" style="font-size:18px;color:var(--muted)" style="padding:8px;background:transparent;border:none;color:var(--muted);cursor:pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><line x1="12" y1="3" x2="12" y2="12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></button>
   </div>
 
   <!-- Header-Bereich -->
   <div style="background:var(--surface);border-bottom:1.5px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.06)">
-    <!-- Erste Zeile: Überschrift = Tab Catering Liste -->
+    <!-- Erste Zeile: Überschrift mit Listenansicht-Link rechts integriert -->
     <div class="touch-tab active" data-touch-tab="catering" id="touch-tab-catering"
-      style="display:block;text-align:center;padding:14px 16px 10px;border-bottom:none;width:100%;font-size:15px;background:linear-gradient(135deg,#e8f4ed 0%,#d0ead8 100%)">
+      style="display:block;text-align:center;padding:12px 16px 10px;border-bottom:none;width:100%;font-size:15px;background:linear-gradient(135deg,#e8f4ed 0%,#d0ead8 100%);position:relative">
+      <a href="listenansicht.html" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600;color:var(--accent);background:rgba(255,255,255,0.7);border:1px solid var(--green-brd);border-radius:5px;padding:3px 7px;text-decoration:none;white-space:nowrap;font-family:var(--sans);line-height:1.4">Liste →</a>
       <div style="font-size:26px;font-weight:700;color:var(--text);line-height:1.2">Catering Liste</div>
       <div style="font-size:18px;font-weight:600;color:var(--accent);margin-top:3px" id="touch-datum-header"></div>
     </div>
@@ -559,9 +553,16 @@ body.is-touch .tabs{padding:0 4px}
 
   <!-- PANEL: Komparsen -->
   <div class="touch-panel" id="touch-panel-komparsen">
-    <div class="touch-komp-panel">
-      <div class="touch-komp-label" style="font-size:22px;font-weight:700;color:var(--text);margin-bottom:8px">Komparsen</div>
-      <div class="touch-komp-label" style="font-size:14px;margin-bottom:24px">Anzahl heute</div>
+    <!-- Zurück + Titel auf gleicher Höhe -->
+    <div style="padding:12px 16px 0;display:flex;align-items:center;gap:16px">
+      <button onclick="touchZurueckZuCatering()" style="display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--accent);font-size:17px;font-weight:600;cursor:pointer;padding:4px 0;font-family:var(--sans);flex-shrink:0">
+        ‹ Zurück
+      </button>
+      <div style="font-size:22px;font-weight:700;color:var(--text)">Komparsen</div>
+    </div>
+    <!-- Stepper direkt darunter -->
+    <div style="padding:16px 24px 0;display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div style="font-size:14px;color:var(--muted)">Anzahl heute</div>
       <div style="display:flex;align-items:center;gap:0;border:2px solid var(--border);border-radius:16px;overflow:hidden;background:var(--surface);width:100%;max-width:320px">
         <button onclick="touchStepperChange(-1)" style="width:72px;height:80px;border:none;background:var(--surface2);font-size:40px;font-weight:300;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex-shrink:0">−</button>
         <input type="number" id="touch-komp-input" min="0" value="0"
@@ -569,7 +570,7 @@ body.is-touch .tabs{padding:0 4px}
           style="flex:1;text-align:center;font-size:52px;font-weight:700;font-family:var(--mono);border:none;background:transparent;color:var(--text);padding:8px 0;touch-action:manipulation;width:100%;outline:none;-webkit-appearance:none">
         <button onclick="touchStepperChange(1)" style="width:72px;height:80px;border:none;background:var(--surface2);font-size:40px;font-weight:300;cursor:pointer;color:var(--text);display:flex;align-items:center;justify-content:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent;flex-shrink:0">+</button>
       </div>
-      <div style="margin-top:20px;font-size:14px;color:var(--muted);font-family:var(--mono)" id="touch-komp-status">–</div>
+      <div style="font-size:14px;color:var(--muted);font-family:var(--mono)" id="touch-komp-status">–</div>
     </div>
   </div>
 
@@ -618,13 +619,32 @@ body.is-touch .tabs{padding:0 4px}
 </div>
 
 <script>
-// ══ KONFIGURATION ══════════════════════════════════════════
 const API_URL = "https://script.google.com/macros/s/AKfycbz_cB6Sol25skRKJWQeG_3y5JHG2iBmREnilLxKx1WDqT8r3yLlgcNnV-j-2dt2yALD/exec";
-// ═══════════════════════════════════════════════════════════
 
-let SESSION_PW = "", allePersonen = [], anwesendHeute = new Set(), exportDaten = [], autosaveTimer = null, PROJEKT_KUERZEL = "", sortierung = "nachname", personenMitTeilnahme = new Set();
+let SESSION_PW = sessionStorage.getItem("catering_session_pw") || "";
+let allePersonen = [], anwesendHeute = new Set(), exportDaten = [], autosaveTimer = null;
+let PROJEKT_KUERZEL = sessionStorage.getItem("catering_session_projekt") || "";
+let sortierung = "nachname", personenMitTeilnahme = new Set();
 
 function heute() { return new Date().toISOString().split("T")[0]; }
+
+// ── Wochentag-Wallpaper ──
+function wallpaperSetzen() {
+  const tag = new Date().getDay(); // 0=So, 1=Mo, 2=Di...
+  const bilder = {0:"So.JPG", 1:"Mo.JPG", 2:"Di.JPG", 3:"Mi.JPG", 4:"Do.JPG", 5:"Fr.JPG", 6:"Sa.JPG"};
+  const datei = bilder[tag] || "Mo.JPG";
+  const appTouch = document.getElementById("app-touch");
+  const app = document.getElementById("app");
+  // background-image separat setzen damit flex-Layout erhalten bleibt
+  // Wallpaper nur auf Touch-Interface
+  if(appTouch) {
+    appTouch.style.backgroundImage = `url('${datei}')`;
+    appTouch.style.backgroundSize = "cover";
+    appTouch.style.backgroundPosition = "center";
+    appTouch.style.backgroundRepeat = "no-repeat";
+    appTouch.style.backgroundAttachment = "fixed";
+  }
+}
 function formatDatum(d) { if(!d)return""; const[y,m,t]=d.split("-"); return`${t}.${m}.${y}`; }
 function formatDatumMitTag(d) {
   if(!d)return"";
@@ -658,7 +678,7 @@ function sortPersonen(arr, by) {
       const p=(a.position||"").localeCompare(b.position||"","de");
       return p!==0?p:a.nachname.localeCompare(b.nachname,"de");
     }
-    // nachname (default)
+
     const n=a.nachname.localeCompare(b.nachname,"de");
     return n!==0?n:(a.vorname||"").localeCompare(b.vorname||"","de");
   });
@@ -666,7 +686,7 @@ function sortPersonen(arr, by) {
 function sortierungWechseln() {
   sortierung = document.getElementById("sort-select").value;
   allePersonen = sortPersonen(allePersonen, sortierung);
-  // Bei Abteilung: Alpha-Sidebar ausblenden (macht keinen Sinn)
+
   renderListe();
   renderPersonenverwaltung();
 }
@@ -685,8 +705,43 @@ function mapPersonen(arr) {
   });
 }
 
-// ── Login ──
 document.getElementById("pw-input").addEventListener("keydown",e=>{if(e.key==="Enter")login();});
+
+// Auto-Login bei Seitenwechsel (sessionStorage)
+(async function() {
+  const sessionPw = sessionStorage.getItem("catering_session_pw");
+  if(sessionPw) {
+    const personen = JSON.parse(sessionStorage.getItem("catering_session_personen")||"[]");
+    const teilnahmeIds = JSON.parse(sessionStorage.getItem("catering_session_teilnahme")||"[]");
+    PROJEKT_KUERZEL = sessionStorage.getItem("catering_session_projekt")||"";
+    SESSION_PW = sessionPw;
+
+    document.getElementById("login-screen").style.display="none";
+    wallpaperSetzen();
+    allePersonen = sortNachname(mapPersonen(personen));
+    personenMitTeilnahme = new Set(teilnahmeIds);
+
+    const lp = document.getElementById("login-projekt");
+    if(lp) lp.textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
+    const tp = document.getElementById("topbar-projekt");
+    if(tp) tp.textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
+    const touchP = document.getElementById("touch-projekt");
+    if(touchP) touchP.textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
+
+    const isTouch = navigator.maxTouchPoints > 0 || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    heuteDatum();
+    if(isTouch) {
+      document.getElementById("app-touch").classList.add("active");
+      await datumWechseln();
+      touchInit();
+    } else {
+      document.getElementById("app").classList.add("active");
+      await datumWechseln();
+      renderPersonenverwaltung();
+      document.getElementById("monat-input").value = heute().slice(0,7);
+    }
+  }
+})();
 
 async function login() {
   const pw=document.getElementById("pw-input").value.trim();
@@ -696,7 +751,6 @@ async function login() {
   document.getElementById("login-error").textContent="";
   SESSION_PW=pw;
 
-  // Offline? → lokale Daten nutzen
   if(!navigator.onLine) {
     const gespeichertPw = localStorage.getItem("catering_pw");
     if(gespeichertPw && pw === gespeichertPw) {
@@ -708,7 +762,7 @@ async function login() {
       document.getElementById("login-screen").style.display="none";
       allePersonen = sortNachname(mapPersonen(personen));
       personenMitTeilnahme = new Set(teilnahmeIds);
-      // Offline-Mode aktivieren
+
       istOffline = true;
       offlineBannerAktualisieren();
       setAutosaveStatus("offline");
@@ -734,17 +788,22 @@ async function login() {
       document.getElementById("login-projekt").textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
       document.getElementById("topbar-projekt").textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
       document.getElementById("login-screen").style.display="none";
+      wallpaperSetzen();
       allePersonen=sortNachname(mapPersonen(res.personen));
       if(res.personenMitTeilnahme) personenMitTeilnahme = new Set(res.personenMitTeilnahme);
-      // Login-Daten lokal speichern für Offline-Nutzung
+
       try {
         localStorage.setItem("catering_pw", pw);
         localStorage.setItem("catering_projekt", PROJEKT_KUERZEL);
         localStorage.setItem("catering_personen", JSON.stringify(res.personen));
         localStorage.setItem("catering_teilnahme_ids", JSON.stringify([...personenMitTeilnahme]));
+        sessionStorage.setItem("catering_session_pw", pw);
+        sessionStorage.setItem("catering_session_projekt", PROJEKT_KUERZEL);
+        sessionStorage.setItem("catering_session_personen", JSON.stringify(res.personen));
+        sessionStorage.setItem("catering_session_teilnahme", JSON.stringify([...personenMitTeilnahme]));
       } catch(e) {}
       heuteDatum(); await datumWechseln();
-      // Touch-Gerät → Touch Interface, Desktop → normales Interface
+
       const isTouch = navigator.maxTouchPoints > 0 ||
                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
       if(isTouch) {
@@ -770,20 +829,20 @@ async function login() {
   const el=document.getElementById?document.getElementById("topbar-brand-btn"):null;
   function start(e){
     timer=setTimeout(()=>{
-      // Zur Übersicht wechseln
+
       document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
       document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-      // Übersicht-Tab sichtbar machen (falls mobile-hide)
+
       const exportTab=document.querySelector('[data-tab="export"]');
       exportTab.classList.add("active");
-      exportTab.style.display="flex"; // temporär sichtbar
+      exportTab.style.display="flex";
       document.getElementById("tab-export").classList.add("active");
       document.getElementById("export-result").innerHTML="";
       document.getElementById("csv-btn").style.display="none";
       document.getElementById("pdf-btn").style.display="none";
       ladeVerfuegbareMonate();
       toast("Übersicht");
-    },3000); // 3 Sekunden halten
+    },3000);
   }
   function stop(){clearTimeout(timer);}
   document.addEventListener("DOMContentLoaded",()=>{
@@ -800,20 +859,23 @@ async function login() {
 
 function logout() {
   SESSION_PW="";
+  sessionStorage.removeItem("catering_session_pw");
+  sessionStorage.removeItem("catering_session_projekt");
+  sessionStorage.removeItem("catering_session_personen");
+  sessionStorage.removeItem("catering_session_teilnahme");
   document.getElementById("login-screen").style.display="flex";
   document.getElementById("app").classList.remove("active");
   document.getElementById("app-touch").classList.remove("active");
   document.getElementById("pw-input").value="";
 }
 
-// ── Tabs ──
 document.querySelectorAll(".tab").forEach(tab=>{
   tab.addEventListener("click",()=>{
     document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
     document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
     tab.classList.add("active");
     document.getElementById("tab-"+tab.dataset.tab).classList.add("active");
-    // Export-Tab: Ansicht leeren beim Öffnen
+
     if(tab.dataset.tab==="export"){
       document.getElementById("export-result").innerHTML="";
       document.getElementById("csv-btn").style.display="none";
@@ -823,9 +885,8 @@ document.querySelectorAll(".tab").forEach(tab=>{
   });
 });
 
-// ── Anwesenheit ──
 function schnellNeuPerson() {
-  // Zum Personen-Tab und Add-Card öffnen
+
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.querySelector('[data-tab="personen"]').classList.add("active");
@@ -873,7 +934,7 @@ function stepperChange(id, delta) {
   const datum = document.getElementById("datum-input").value;
   if(!datum) return;
   setAutosaveStatus("pending");
-  // Debounce: erst nach 800ms speichern (schnelles Tippen sammeln)
+
   clearTimeout(zaehlerTimer[id]);
   zaehlerTimer[id] = setTimeout(() => {
     const isKomp = id==="komparsen-input";
@@ -893,8 +954,8 @@ async function speichereZaehler(datum, pid, name, abt, wert) {
   }
   try {
     const res = await api("setZaehler", {datum, pid, name, abteilung:abt, wert});
-    if(res.ok) setAutosaveStatus("saved");
-    else setAutosaveStatus("err");
+    if(res.ok) { setAutosaveStatus("saved"); }
+    else { setAutosaveStatus("err"); toast("Fehler: " + (res.error||"unbekannt")); }
   } catch(e) {
     istOffline = true;
     offlineBannerAktualisieren();
@@ -913,10 +974,10 @@ function heuteDatum() {
 async function datumWechseln() {
   const datum=document.getElementById("datum-input").value;
   if(!datum)return;
-  // Datum-Anzeige aktualisieren
+
   document.getElementById("datum-anzeige").textContent=formatDatumMitTag(datum);
   document.getElementById("topbar-date").textContent=formatDatumMitTag(datum);
-  // Kalender mit 100ms Verzögerung schließen
+
   const inp = document.getElementById("datum-input");
   setTimeout(() => { inp.blur(); inp.setAttribute("readonly",true); setTimeout(()=>inp.removeAttribute("readonly"),50); }, 100);
   setAutosaveStatus("laden");
@@ -973,10 +1034,10 @@ function renderListe() {
       }
     }
     const canEdit = p.id.startsWith("P") && !personenMitTeilnahme.has(p.id);
-    // Namensdarstellung je nach Sortierung
+
     let nameHTML;
     if(sortierung==="vorname") {
-      // Vorname FETT+dunkel, Nachname normal+grau, kein Komma
+
       nameHTML=`<span style="font-weight:600;color:var(--text)">${p.vorname||p.nachname}</span>${p.vorname?` <span style="font-weight:400;color:var(--muted)">${p.nachname}</span>`:""}`;
     } else {
       nameHTML=`<span class="nachname">${p.nachname}</span><span class="vorname">${p.vorname?", "+p.vorname:""}</span>`;
@@ -997,7 +1058,6 @@ function renderListe() {
   }).join("");
   container.innerHTML=html||'<div style="color:var(--muted);padding:16px 4px;font-size:15px">Keine Einträge.</div>';
 
-  // Alphabet-Sidebar aufbauen (nur bei Nachname-Sortierung sinnvoll)
   const sidebar=document.getElementById("alpha-sidebar");
   if(sortierung==="nachname"||sortierung==="vorname") {
     const alle="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
@@ -1037,14 +1097,13 @@ function filterListe(suche) {
 function alphaScroll(b) {
   const el=document.getElementById("alpha-"+b);
   if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
-  // Kurzer visueller Feedback
+
   document.querySelectorAll(".alpha-sidebar span").forEach(s=>{
     s.classList.toggle("active", s.textContent===b);
   });
   setTimeout(()=>document.querySelectorAll(".alpha-sidebar span").forEach(s=>s.classList.remove("active")),400);
 }
 
-// ── Offline-System ──
 const OFFLINE_KEY = "catering_offline_queue";
 let istOffline = false;
 
@@ -1057,7 +1116,7 @@ function offlineQueueSpeichern(q) {
 }
 function offlineQueueHinzufuegen(eintrag) {
   const q = offlineQueueLaden();
-  // Gleichen Eintrag ersetzen
+
   const idx = q.findIndex(e => e.datum===eintrag.datum && e.pid===eintrag.pid);
   if(idx >= 0) q.splice(idx, 1);
   q.push(eintrag);
@@ -1067,14 +1126,13 @@ function offlineQueueHinzufuegen(eintrag) {
 function offlineBannerAktualisieren() {
   const q = offlineQueueLaden();
   const anzahl = q.length;
-  const onLine = navigator.onLine;
   ["touch","desktop"].forEach(t => {
     const banner = document.getElementById("offline-banner-"+t);
     const count  = document.getElementById("offline-count-"+t);
     if(!banner) return;
     if(istOffline || anzahl > 0) {
       banner.classList.add("show");
-      if(count) count.textContent = anzahl + " | istOffline:" + istOffline + " | onLine:" + onLine;
+      if(count) count.textContent = anzahl;
     } else {
       banner.classList.remove("show");
     }
@@ -1087,7 +1145,14 @@ async function offlineQueueSync() {
   const erfolgreich = [];
   for(const e of q) {
     try {
-      const res = await api("togglePerson", {datum:e.datum, pid:e.pid, an:e.an, name:e.name, abteilung:e.abteilung});
+      let res;
+      if(e.action === "zaehler") {
+
+        res = await api("setZaehler", {datum:e.datum, pid:e.pid, name:e.name, abteilung:e.abteilung, wert:e.wert});
+      } else {
+
+        res = await api("togglePerson", {datum:e.datum, pid:e.pid, an:e.an, name:e.name, abteilung:e.abteilung});
+      }
       if(res && res.ok) erfolgreich.push(e);
       else break;
     } catch(err) { break; }
@@ -1098,6 +1163,9 @@ async function offlineQueueSync() {
     istOffline = false;
     offlineBannerAktualisieren();
     setAutosaveStatus("saved");
+
+    const kompStatus = document.getElementById("touch-komp-status");
+    if(kompStatus && kompStatus.textContent.includes("Offline")) kompStatus.textContent = "Synchronisiert ✓";
     if(erfolgreich.length > 0) toast("✓ "+erfolgreich.length+" Änderungen synchronisiert");
   }
 }
@@ -1106,7 +1174,6 @@ async function offlineQueueSync() {
 window.addEventListener("online",  () => { istOffline=false; offlineBannerAktualisieren(); setTimeout(offlineQueueSync, 1000); });
 window.addEventListener("offline", () => { istOffline=true;  offlineBannerAktualisieren(); setAutosaveStatus("offline"); });
 
-// ── Toggle-Queue ──
 const toggleQueue = [];
 let verarbeiteQueue = false;
 
@@ -1114,15 +1181,15 @@ function toggle(id) {
   const war = anwesendHeute.has(id);
   if(war) anwesendHeute.delete(id); else anwesendHeute.add(id);
   renderListe();
-  zeigeGespeichertBestaetigung(); // Sofortiges Feedback
+  zeigeGespeichertBestaetigung();
   const p = allePersonen.find(x=>x.id===id);
   if(!p) return;
   const datum = document.getElementById("datum-input").value;
   if(!datum) return;
-  // In Queue stellen — doppelte Einträge für gleiche Person zusammenfassen
+
   const existing = toggleQueue.findIndex(q=>q.pid===id);
   if(existing >= 0) {
-    // Gleiche Person nochmal getoggled — aus Queue entfernen (heben sich auf)
+
     toggleQueue.splice(existing, 1);
   } else {
     toggleQueue.push({datum, pid:id, an:!war, p});
@@ -1146,7 +1213,7 @@ async function verarbeiteToggleQueue() {
         if(an) personenMitTeilnahme.add(pid);
         setAutosaveStatus("saved");
       } else if(res.error === "Offline" || !navigator.onLine) {
-        // Service Worker meldet Offline → in Queue
+
         istOffline = true;
         const name = p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname;
         offlineQueueHinzufuegen({datum, pid, an, name, abteilung: p.position||""});
@@ -1160,14 +1227,14 @@ async function verarbeiteToggleQueue() {
         renderListe();
         break;
       } else {
-        // Rollback dieses Eintrags
+
         if(an) anwesendHeute.delete(pid); else anwesendHeute.add(pid);
         renderListe();
         setAutosaveStatus("err");
         zeigeFehlerOverlay("Server-Fehler: " + (res.error||""));
       }
     } catch(e) {
-      // Netzwerkfehler → Offline-Mode
+
       istOffline = true;
       const name = p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname;
       offlineQueueHinzufuegen({datum, pid, an, name, abteilung: p.position||""});
@@ -1187,11 +1254,10 @@ async function verarbeiteToggleQueue() {
     setAutosaveStatus("saved");
     renderListe();
   } else {
-    verarbeiteToggleQueue(); // Noch mehr in der Queue
+    verarbeiteToggleQueue();
   }
 }
 
-// ── Autosave ──
 function planAutosave() {
   setAutosaveStatus("pending");
   clearTimeout(autosaveTimer);
@@ -1204,12 +1270,12 @@ let speichertGerade = false;
 let speichernAusstehend = false;
 
 async function autosave() {
-  // Offline → nicht versuchen, Queue kümmert sich darum
+
   if(istOffline || !navigator.onLine) {
     setAutosaveStatus("offline");
     return;
   }
-  // Wenn gerade gespeichert wird: merken und später nochmal
+
   if (speichertGerade) {
     speichernAusstehend = true;
     return;
@@ -1225,7 +1291,6 @@ async function autosave() {
     .filter(p=>anwesendHeute.has(p.id))
     .map(p=>({id:p.id,name:p.vorname?`${p.nachname}, ${p.vorname}`:p.nachname,abteilung:p.position||""}));
 
-  // Für Retry speichern
   letzterSpeicherversuch = {datum, eintraege, komparsen, gaeste};
 
   try {
@@ -1240,17 +1305,17 @@ async function autosave() {
       zeigeFehlerOverlay("Server-Fehler: " + (res.error||"Unbekannt"));
     }
   } catch(e) {
-    // Netzwerkfehler → Offline-Mode statt Fehler-Overlay
+
     istOffline = true;
     offlineBannerAktualisieren();
     setAutosaveStatus("offline");
-    // Einträge in Offline-Queue sichern
+
     eintraege.forEach(e => {
       offlineQueueHinzufuegen({datum, pid:e.id, an:true, name:e.name, abteilung:e.abteilung});
     });
   } finally {
     speichertGerade = false;
-    // Wenn während des Speicherns neue Änderungen kamen: nochmal speichern
+
     if (speichernAusstehend) {
       speichernAusstehend = false;
       setTimeout(autosave, 300);
@@ -1268,7 +1333,7 @@ function zeigeGespeichertBestaetigung() {
 }
 
 function zeigeFehlerOverlay(text) {
-  // Im Offline-Modus kein Fehler-Overlay — die Offline-Queue kümmert sich darum
+
   if(istOffline) return;
   document.getElementById("fehler-text").textContent = text;
   document.getElementById("fehler-overlay").style.display = "flex";
@@ -1281,7 +1346,7 @@ function fehlerOverlaySchliessen() {
 async function fehlerRetry() {
   fehlerOverlaySchliessen();
   if(!letzterSpeicherversuch) return;
-  // Offline? → in Queue speichern
+
   if(istOffline || !navigator.onLine) {
     const d = letzterSpeicherversuch;
     d.eintraege.forEach(e => {
@@ -1311,7 +1376,7 @@ async function fehlerRetry() {
       zeigeFehlerOverlay("Retry fehlgeschlagen: " + (res.error||""));
     }
   } catch(e) {
-    // Auch hier offline
+
     istOffline = true;
     offlineBannerAktualisieren();
     if(letzterSpeicherversuch) {
@@ -1325,7 +1390,7 @@ async function fehlerRetry() {
 }
 
 async function fehlerPruefen() {
-  // Teilnahme vom Server laden und mit lokalem Zustand vergleichen
+
   fehlerOverlaySchliessen();
   const datum = document.getElementById("datum-input").value;
   if(!datum) return;
@@ -1352,9 +1417,10 @@ function setAutosaveStatus(s) {
   if(!dot||!text) return;
   dot.className="autosave-dot";
   const uhr=new Date().toLocaleTimeString("de-DE",{hour:"2-digit",minute:"2-digit"});
-  // Touch-Topbar Status mitführen
+
   const touchStatus=document.getElementById("touch-save-status");
   if(touchStatus) {
+    if(s==="laden")   { touchStatus.innerHTML='<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0a500;animation:pulse .8s ease-in-out infinite;margin-right:5px;vertical-align:middle"></span><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">Laden…</span>'; }
     if(s==="saving"||s==="pending") { touchStatus.innerHTML='<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#f0a500;animation:pulse .8s ease-in-out infinite;margin-right:5px;vertical-align:middle"></span><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">speichere…</span>'; }
     else if(s==="saved") { touchStatus.innerHTML='<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);margin-right:5px;vertical-align:middle"></span><span style="font-family:var(--mono);font-size:12px;color:var(--muted)">'+uhr+'</span>'; }
     else if(s==="err")   { touchStatus.innerHTML='<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);margin-right:5px;vertical-align:middle"></span><span style="font-family:var(--mono);font-size:12px;color:var(--red)">Fehler</span>'; }
@@ -1369,23 +1435,22 @@ function setAutosaveStatus(s) {
   if(s==="err")     {text.textContent="Fehler beim Speichern";dot.classList.add("err");}
 }
 
-// ── Personenverwaltung ──
 function renderPersonenverwaltung() {
   document.getElementById("count-personen").textContent=allePersonen.length;
   const c=document.getElementById("personen-verwaltung");
   if(allePersonen.length===0){c.innerHTML='<div style="color:var(--muted);font-size:15px;padding:12px 0">Noch keine Personen angelegt.</div>';return;}
   let letzteGruppe="";
   c.innerHTML=allePersonen.map(p=>{
-    // Namensdarstellung je nach Sortierung
+
     let nameHTML;
     if(sortierung==="vorname") {
       nameHTML=`<span style="font-weight:600;color:var(--text)">${p.vorname||p.nachname}</span>${p.vorname?` <span style="font-weight:400;color:var(--muted)">${p.nachname}</span>`:""}`;
     } else {
       nameHTML=`<span class="nachname">${p.nachname}</span><span class="vorname">${p.vorname?", "+p.vorname:""}</span>`;
     }
-    // Abteilung nur zeigen wenn nicht nach Abteilung sortiert
+
     const zeigPos = p.position && sortierung!=="abteilung" && sortierung!=="kompakt";
-    // Gruppenüberschriften bei Abteilung/Kompakt
+
     let div="";
     if(sortierung==="abteilung"||sortierung==="kompakt") {
       const g=p.position||"Ohne Abteilung";
@@ -1467,7 +1532,7 @@ async function personLoeschen() {
   const p = allePersonen.find(x => x.id === editId);
   if (!p) return;
   const name = p.vorname ? `${p.nachname}, ${p.vorname}` : p.nachname;
-  // Eigene Bestätigung statt confirm() (funktioniert zuverlässig auf Mobile)
+
   document.getElementById("edit-error").textContent = "";
   const btn = document.getElementById("edit-del-btn");
   if (btn.dataset.confirm !== "1") {
@@ -1522,7 +1587,7 @@ function toggleAddCard() {
 
 function addAbbrechen() {
   toggleAddCard();
-  // Zurück zur Teilnahme-Seite
+
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
   document.querySelector('[data-tab="anwesenheit"]').classList.add("active");
@@ -1554,14 +1619,14 @@ async function personAnlegen() {
       document.getElementById("new-abt").selectedIndex=0;
       document.getElementById("add-error").textContent="";
       renderPersonenverwaltung(); renderListe();
-      // Zurück zu Teilnahme, neu angelegte Person anzeigen
+
       document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
       document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
       document.querySelector('[data-tab="anwesenheit"]').classList.add("active");
       document.getElementById("tab-anwesenheit").classList.add("active");
       document.getElementById("add-card").classList.remove("open");
       document.getElementById("add-toggle-btn").innerHTML='<span class="icon">+</span> Neue Person anlegen';
-      // Neue Person in der Liste finden und scrollen
+
       setTimeout(()=>{
         const row = document.querySelector(`[data-id="${res.id}"]`);
         if(row) row.scrollIntoView({behavior:"smooth", block:"center"});
@@ -1572,7 +1637,6 @@ async function personAnlegen() {
   finally { saveBtn.disabled=false; document.getElementById("add-status-bar").style.display="none"; }
 }
 
-// ── Import ──
 function toggleImportCard() {
   const card=document.getElementById("import-card");
   const btn=document.getElementById("import-toggle-btn");
@@ -1642,7 +1706,6 @@ async function importDurchfuehren() {
   btn.disabled=false; btn.textContent="Importieren";
 }
 
-// ── Export ──
 async function ladeVerfuegbareMonate() {
   try {
     const res = await api("getMonate");
@@ -1658,11 +1721,11 @@ async function ladeVerfuegbareMonate() {
       opt.textContent = label;
       sel.appendChild(opt);
     });
-    // Aktuellen Monat vorauswählen falls vorhanden
+
     const heute = new Date().toISOString().slice(0,7);
     if(res.monate.includes(heute)) sel.value = heute;
     else if(res.monate.length>0) sel.value = res.monate[res.monate.length-1];
-    // Automatisch laden wenn Monat vorausgewählt
+
     if(sel.value) exportLaden();
   } catch(e) {}
 }
@@ -1679,7 +1742,7 @@ async function exportLaden() {
     exportDaten=res.eintraege;
     if(exportDaten.length===0){c.innerHTML='<div style="color:var(--muted);font-size:15px">Keine Einträge für diesen Monat.</div>';return;}
     const wochentage=["So","Mo","Di","Mi","Do","Fr","Sa"];
-    // Alle Tage des Monats generieren (nicht nur Tage mit Einträgen)
+
     const [jahr,mon] = monat.split("-").map(Number);
     const tageImMonat = new Date(jahr, mon, 0).getDate();
     const alleTage = Array.from({length:tageImMonat}, (_,i) => {
@@ -1687,7 +1750,6 @@ async function exportLaden() {
       return `${monat}-${t}`;
     });
 
-    // Header: Wochentag oben, Tag unten — zweizeilig
     const tageHeader=alleTage.map(t=>{
       const d=new Date(t+"T12:00:00");
       const tag=t.split("-")[2];
@@ -1698,7 +1760,6 @@ async function exportLaden() {
     }).join("");
     const header=`<tr><th class="col-name">Name</th><th class="col-sum">∑</th>${tageHeader}</tr>`;
 
-    // Nach Abteilung gruppieren
     const abtReihenfolge=["PRODUZENTEN","REGIE","PRODUKTION","KAMERA","KAMERABÜHNE","KOSTÜM","LICHT","MASKENBILD","SZENENBILD","TON","TURBINE STUDIOS HAUPTHAUS","CAST","GÄSTE","Komparsen","Ohne Abteilung"];
     const gruppen={};
     exportDaten.forEach(e=>{
@@ -1725,7 +1786,7 @@ async function exportLaden() {
             const d=new Date(t+"T12:00:00");
             const isWE=d.getDay()===0||d.getDay()===6;
             const bg=isWE?' style="background:#fff3e0"':'';
-            // Für Komparsen/Gäste: tatsächliche Anzahl anzeigen
+
             if(e.tagAnzahlen) {
               const n=e.tagAnzahlen[t]||0;
               return `<td${bg}>${n>0?`<span style="color:var(--accent);font-weight:700;font-size:11px">${n}</span>`:'<span style="color:var(--border)">·</span>'}</td>`;
@@ -1776,7 +1837,6 @@ function pdfExport() {
   const wochentage = ["So","Mo","Di","Mi","Do","Fr","Sa"];
   const abtReihenfolge = ["PRODUZENTEN","REGIE","PRODUKTION","KAMERA","KAMERABÜHNE","KOSTÜM","LICHT","MASKENBILD","SZENENBILD","TON","TURBINE STUDIOS HAUPTHAUS","CAST","GÄSTE","Komparsen","Ohne Abteilung"];
 
-  // Alle Tage des Monats
   const [pJahr,pMon] = monat.split("-").map(Number);
   const pTageImMonat = new Date(pJahr, pMon, 0).getDate();
   const alleTage = Array.from({length:pTageImMonat}, (_,i) => {
@@ -1784,7 +1844,6 @@ function pdfExport() {
     return `${monat}-${t}`;
   });
 
-  // Nach Abteilung gruppieren
   const gruppen = {};
   exportDaten.forEach(e => {
     const abt = e.abteilung || "Ohne Abteilung";
@@ -1798,21 +1857,19 @@ function pdfExport() {
     return ia-ib;
   });
 
-  // Spalten-Header
   const kopf = ["Name", "SUM", ...alleTage.map(t => {
     const d = new Date(t+"T12:00:00");
     return wochentage[d.getDay()]+"\n"+t.split("-")[2];
   })];
-  // Wochenend-Spalten-Indizes merken für Header-Styling
+
   const weIndizes = new Set(alleTage.map((t,i)=>{
     const d=new Date(t+"T12:00:00");
     return (d.getDay()===0||d.getDay()===6)?i+2:-1;
   }).filter(i=>i>=0));
 
-  // Zeilen aufbauen
   const body = [];
   sortierteGruppen.forEach(abt => {
-    // Gruppenüberschrift
+
     body.push([{ content: abt, colSpan: alleTage.length+2, styles: {
       fillColor:[220,218,212], textColor:[80,80,80],
       fontStyle:"bold", fontSize:7, cellPadding:2
@@ -1829,7 +1886,6 @@ function pdfExport() {
     });
   });
 
-  // Titel
   doc.setFontSize(11);
   doc.setFont("helvetica","bold");
   doc.text(titel, 10, 10);
@@ -1839,7 +1895,6 @@ function pdfExport() {
   doc.text(`Erstellt: ${new Date().toLocaleDateString("de-DE")}`, 10, 16);
   doc.setTextColor(0);
 
-  // Tabelle
   doc.autoTable({
     head: [kopf],
     body: body,
@@ -1856,21 +1911,21 @@ function pdfExport() {
     },
     headStyles: { fillColor:[238,237,232], textColor:[60,60,60], fontSize:6.5 },
     didParseCell: (data) => {
-      // Zelle mit 1 = Anwesenheit — Text leer lassen, Punkt via didDrawCell
+
       if(data.cell.raw === 1) {
         data.cell.text = [""];
         data.cell.styles.fillColor = [255,255,255];
       }
-      // Komparsen/Gäste: Zahl anzeigen
+
       if(typeof data.cell.raw === "number" && data.cell.raw > 1 && data.column.index >= 2) {
         data.cell.text = [String(data.cell.raw)];
       }
-      // Wochenend-Spalten Header orange
+
       if(data.section==="head" && data.column.index>=2 && weIndizes.has(data.column.index)) {
         data.cell.styles.fillColor = [255,243,224];
         data.cell.styles.textColor = [212,116,10];
       }
-      // ∑-Spalte
+
       if(data.column.index===1 && data.section==="body" && typeof data.cell.raw === "number") {
         data.cell.styles.textColor = [26,107,60];
         data.cell.styles.fillColor = [232,244,237];
@@ -1879,7 +1934,7 @@ function pdfExport() {
     },
     alternateRowStyles: { fillColor:[250,250,248] },
     didDrawCell: (data) => {
-      // Wochenende-Spalten orange unterlegen
+
       if(data.column.index >= 2 && data.section !== "head") {
         const tIdx = data.column.index - 2;
         if(tIdx < alleTage.length) {
@@ -1890,14 +1945,14 @@ function pdfExport() {
           }
         }
       }
-      // Grüner Punkt für Anwesenheit (nach Hintergrund zeichnen)
+
       if(data.cell.raw === 1 && data.section === "body" && data.column.index >= 2) {
         const x = data.cell.x + data.cell.width/2;
         const y = data.cell.y + data.cell.height/2;
         doc.setFillColor(26,107,60);
         doc.circle(x, y, 1.2, "F");
       }
-      // Komparsen/Gäste Zahlen: grün anzeigen
+
       if(typeof data.cell.raw === "number" && data.cell.raw > 1 && data.section === "body" && data.column.index >= 2) {
         data.cell.styles.textColor = [26,107,60];
         data.cell.styles.fontStyle = "bold";
@@ -1910,14 +1965,12 @@ function pdfExport() {
   toast("PDF exportiert");
 }
 
-
-// ── Service Worker registrieren ──
 if("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("./sw.js", {scope: "./"})
       .then(reg => {
         console.log("SW registriert:", reg.scope);
-        // Auf Update prüfen
+
         reg.addEventListener("updatefound", () => {
           const newSW = reg.installing;
           newSW.addEventListener("statechange", () => {
@@ -1931,12 +1984,10 @@ if("serviceWorker" in navigator) {
   });
 }
 
-// ══ TOUCH INTERFACE JS ══════════════════════════════════════
-
 let touchZaehlerTimer = null;
 
 function touchInit() {
-  // Datum in Header und Tab
+
   const h = heute();
   const monate = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
   const [y,m,t] = h.split("-");
@@ -1946,16 +1997,13 @@ function touchInit() {
   const hdr = document.getElementById("touch-datum-header");
   if(hdr) hdr.textContent = `vom ${datumText}`;
 
-  // Projektkürzel
   const proj = document.getElementById("touch-projekt");
   if(proj) proj.textContent = PROJEKT_KUERZEL ? "· " + PROJEKT_KUERZEL : "";
 
-  // Komparsen-Wert laden
   const komp = parseInt(document.getElementById("komparsen-input")?.value)||0;
   const ti = document.getElementById("touch-komp-input");
   if(ti) ti.value = komp;
 
-  // Long-press auf Touch-Brand
   const brand = document.getElementById("touch-brand-btn");
   if(brand) {
     let t = null;
@@ -1964,7 +2012,6 @@ function touchInit() {
     brand.addEventListener("touchcancel",()=>clearTimeout(t));
   }
 
-  // Tab-Wechsel
   document.querySelectorAll(".touch-tab[data-touch-tab]").forEach(tab=>{
     tab.addEventListener("click", ()=>{
       document.querySelectorAll(".touch-tab").forEach(t=>t.classList.remove("active"));
@@ -1978,7 +2025,7 @@ function touchInit() {
 function touchZuUebersicht() {
   document.getElementById("app-touch").classList.remove("active");
   document.getElementById("app").classList.add("active");
-  // Zurück-Button einblenden
+
   document.getElementById("topbar-back-touch").style.display = "flex";
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
@@ -2015,14 +2062,12 @@ function touchRenderListe(suche) {
     return;
   }
 
-  // Nur Wortanfänge
-  // Nur nach Nachname suchen
   const treffer = allePersonen.filter(p => {
     return p.nachname.toLowerCase().startsWith(suche);
   });
 
   if(treffer.length === 0) {
-    // Kein Treffer → Anlegen anbieten
+
     const anzeige = suche.charAt(0).toUpperCase() + suche.slice(1);
     container.innerHTML = `
       <div class="touch-no-result">Kein Eintrag gefunden für „${anzeige}"</div>
@@ -2049,7 +2094,7 @@ function touchRenderListe(suche) {
 
 function touchToggle(id) {
   toggle(id);
-  // Nach Haken setzen: Suche zurücksetzen → Normalansicht
+
   setTimeout(()=>{
     document.getElementById("touch-suche").value = "";
     document.getElementById("touch-suche-clear").style.display = "none";
@@ -2060,7 +2105,7 @@ function touchToggle(id) {
 }
 
 function touchSaveStatusAktualisieren() {
-  // wird jetzt durch setAutosaveStatus automatisch mitgezogen
+
 }
 
 // Komparsen Stepper
@@ -2068,10 +2113,17 @@ function touchStepperChange(delta) {
   const inp = document.getElementById("touch-komp-input");
   const val = parseInt(inp.value)||0;
   inp.value = Math.max(0, val + delta);
-  // Sync mit Haupt-Stepper
+
   const mainInp = document.getElementById("komparsen-input");
   if(mainInp) mainInp.value = inp.value;
   touchZaehlerSpeichern();
+}
+
+function touchZurueckZuCatering() {
+  document.querySelectorAll(".touch-tab").forEach(t=>t.classList.remove("active"));
+  document.querySelectorAll(".touch-panel").forEach(p=>p.classList.remove("active"));
+  document.getElementById("touch-tab-catering").classList.add("active");
+  document.getElementById("touch-panel-catering").classList.add("active");
 }
 
 function touchZaehlerSpeichern() {
@@ -2084,11 +2136,29 @@ function touchZaehlerSpeichern() {
   clearTimeout(touchZaehlerTimer);
   touchZaehlerTimer = setTimeout(async ()=>{
     const wert = parseInt(inp.value)||0;
+
+    if(istOffline || !navigator.onLine) {
+      offlineQueueHinzufuegen({action:"zaehler", datum, pid:"KOMP01", name:"Komparsen", abteilung:"10 Komparsen", wert});
+      if(status) status.textContent = "Offline — wird gespeichert ⚡";
+      return;
+    }
     try {
       const res = await api("setZaehler", {datum, pid:"KOMP01", name:"Komparsen", abteilung:"10 Komparsen", wert});
-      if(status) status.textContent = res.ok ? `Gespeichert ✓` : "Fehler";
+      if(res.ok) {
+        if(status) status.textContent = "Gespeichert ✓";
+      } else if(res.error === "Offline" || !navigator.onLine) {
+        istOffline = true;
+        offlineQueueHinzufuegen({action:"zaehler", datum, pid:"KOMP01", name:"Komparsen", abteilung:"10 Komparsen", wert});
+        offlineBannerAktualisieren();
+        if(status) status.textContent = "Offline — wird gespeichert ⚡";
+      } else {
+        if(status) status.textContent = "Fehler";
+      }
     } catch(e) {
-      if(status) status.textContent = "Offline";
+      istOffline = true;
+      offlineQueueHinzufuegen({action:"zaehler", datum, pid:"KOMP01", name:"Komparsen", abteilung:"10 Komparsen", wert});
+      offlineBannerAktualisieren();
+      if(status) status.textContent = "Offline — wird gespeichert ⚡";
     }
   }, 800);
 }
@@ -2098,7 +2168,7 @@ function touchNeuePersonOeffnen(vorname="") {
   document.getElementById("touch-new-dialog").classList.add("open");
   document.getElementById("touch-new-error").textContent = "";
   document.getElementById("touch-new-status").style.display = "none";
-  // Suchbegriff als Nachname vorausfüllen
+
   const suche = document.getElementById("touch-suche").value.trim();
   document.getElementById("touch-new-nachname").value = suche ? suche.charAt(0).toUpperCase()+suche.slice(1) : "";
   document.getElementById("touch-new-vorname").value = "";
@@ -2125,12 +2195,12 @@ async function touchPersonAnlegen() {
   try {
     const res = await api("addPerson", {name, abteilung, rolle:""});
     if(res.ok) {
-      // Person zu lokaler Liste hinzufügen
+
       allePersonen = sortNachname([...allePersonen, {id:res.id, nachname, vorname, position:abteilung}]);
-      // Sofort als anwesend markieren
+
       toggle(res.id);
       touchNeuePersonSchliessen();
-      // Suche auf neuen Namen setzen
+
       document.getElementById("touch-suche").value = nachname;
       document.getElementById("touch-suche-clear").style.display = "flex";
       touchSuche();
